@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscripción de Gamertags</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>Carrera 1</h1>
+            <table id="carrera1">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Piloto</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <script>
+                        const puntosCarrera = [350, 320, 300, 280, 260, 240, 220, 200, 190, 180, 170, 160, 150, 140, 130, 120, 110, 100, 90, 80, 70, 60, 59, 40];
+                        for (let i = 0; i < 24; i++) {
+                            document.write(`
+                                <tr>
+                                    <td>${i + 1}</td>
+                                    <td><input type="text" class="piloto" style="width: 200px;" disabled></td>
+                                    <td>${puntosCarrera[i]}</td>
+                                </tr>
+                            `);
+                        }
+                    </script>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>Carrera 2</h1>
+            <table id="carrera2">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Piloto</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <script>
+                        for (let i = 0; i < 24; i++) {
+                            document.write(`
+                                <tr>
+                                    <td>${i + 1}</td>
+                                    <td><input type="text" class="piloto" style="width: 200px;" disabled></td>
+                                    <td>${puntosCarrera[i]}</td>
+                                </tr>
+                            `);
+                        }
+                    </script>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <h1>Posiciones Generales</h1>
+            <table id="posicionesGenerales">
+                <thead>
+                    <tr>
+                        <th>Posición</th>
+                        <th>Piloto</th>
+                        <th>Puntos</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaPosiciones">
+                    <!-- Las filas se generarán automáticamente con JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="mensaje"></div>
+    <div id="lista">
+        <input type="text" id="editar" placeholder="Ingresar palabra clave">
+        <button onclick="habilitarEdicion()">Editar</button>
+        <button onclick="guardarDatos()">Guardar</button>
+    </div>
+
+    <script>
+        function habilitarEdicion() {
+            const editarInput = document.getElementById('editar');
+            if (editarInput.value === 'EditarLista') {
+                document.querySelectorAll('.piloto').forEach(input => {
+                    input.disabled = false;
+                });
+            }
+        }
+
+        function guardarDatos() {
+            const pilotosCarrera1 = Array.from(document.querySelectorAll('#carrera1 .piloto')).map(input => input.value);
+            const pilotosCarrera2 = Array.from(document.querySelectorAll('#carrera2 .piloto')).map(input => input.value);
+            localStorage.setItem('pilotosCarrera1', JSON.stringify(pilotosCarrera1));
+            localStorage.setItem('pilotosCarrera2', JSON.stringify(pilotosCarrera2));
+
+            actualizarPosicionesGenerales();
+
+            document.getElementById('mensaje').innerText = 'Datos guardados.';
+        }
+
+        function cargarDatos() {
+            const pilotosCarrera1 = JSON.parse(localStorage.getItem('pilotosCarrera1')) || [];
+            const pilotosCarrera2 = JSON.parse(localStorage.getItem('pilotosCarrera2')) || [];
+
+            document.querySelectorAll('#carrera1 .piloto').forEach((input, index) => {
+                input.value = pilotosCarrera1[index] || '';
+            });
+            document.querySelectorAll('#carrera2 .piloto').forEach((input, index) => {
+                input.value = pilotosCarrera2[index] || '';
+            });
+
+            actualizarPosicionesGenerales();
+        }
+
+        function actualizarPosicionesGenerales() {
+            const pilotosCarrera1 = Array.from(document.querySelectorAll('#carrera1 .piloto')).map(input => input.value);
+            const pilotosCarrera2 = Array.from(document.querySelectorAll('#carrera2 .piloto')).map(input => input.value);
+            const puntosCarrera1 = Array.from(document.querySelectorAll('#carrera1 td:nth-child(3)')).map(td => parseInt(td.textContent));
+            const puntosCarrera2 = Array.from(document.querySelectorAll('#carrera2 td:nth-child(3)')).map(td => parseInt(td.textContent));
+
+            const puntosTotales = {};
+
+            pilotosCarrera1.forEach((piloto, index) => {
+                if (piloto) {
+                    puntosTotales[piloto] = (puntosTotales[piloto] || 0) + puntosCarrera1[index];
+                }
+            });
+
+            pilotosCarrera2.forEach((piloto, index) => {
+                if (piloto) {
+                    puntosTotales[piloto] = (puntosTotales[piloto] || 0) + puntosCarrera2[index];
+                }
+            });
+
+            const pilotosOrdenados = Object.keys(puntosTotales).sort((a, b) => puntosTotales[b] - puntosTotales[a]);
+
+            const tbody = document.getElementById('tablaPosiciones');
+            tbody.innerHTML = '';
+
+            pilotosOrdenados.forEach((piloto, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${piloto}</td>
+                        <td>${puntosTotales[piloto]}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.onload = cargarDatos;
+    </script>
+</body>
+</html>
