@@ -61,8 +61,8 @@
 
     <script>
         // Variables para JSONBin
-        const binId = 'YOUR_BIN_ID'; // Reemplaza con el ID de tu bin en jsonbin.io
-        const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu API Key de jsonbin.io
+        const binId = '67be4dcce41b4d34e49c623b'; // Reemplaza con el ID de tu bin en jsonbin.io
+        const apiKey = '$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S'; // Reemplaza con tu API Key de jsonbin.io
 
         // Inicializamos gamertags (se cargará desde JSONBin)
         let gamertags = [];
@@ -70,9 +70,9 @@
         // Cargar datos desde JSONBin
         async function loadGamertags() {
             try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${67be4dcce41b4d34e49c623b}`, {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
                     headers: {
-                        'X-Master-Key': $2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S
+                        'X-Master-Key': apiKey
                     }
                 });
                 if (response.ok) {
@@ -90,11 +90,11 @@
         // Actualizar datos en JSONBin
         async function updateJsonBin() {
             try {
-                const response = await fetch(`https://api.jsonbin.io/v3/b/${67be4dcce41b4d34e49c623b}`, {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': $2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S
+                        'X-Master-Key': apiKey
                     },
                     body: JSON.stringify({ record: gamertags })
                 });
