@@ -138,8 +138,8 @@
 
   <script>
     const apiKey = "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S";
-    const getUrl = "https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b/latest";
-    const putUrl = "https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b";
+    const getUrl = "https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d/latest"; // Bin ID actualizado
+    const putUrl = "https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d"; // Bin ID actualizado
     let registroData = [];
 
     // Obtener datos iniciales desde JSONBin y renderizar la tabla
@@ -150,8 +150,12 @@
           headers: { "X-Master-Key": apiKey }
         });
         const data = await response.json();
-        registroData = data.record;
-        renderTabla();
+        if (data && data.record) {
+          registroData = data.record;
+          renderTabla();
+        } else {
+          console.error("No se pudo obtener datos válidos.");
+        }
       } catch (error) {
         console.error("Error al obtener datos de JSONBin:", error);
       }
@@ -160,10 +164,14 @@
     // Renderizar la tabla de registros
     function renderTabla() {
       const tbody = document.getElementById("tablaPilotos");
-      tbody.innerHTML = "";
-      registroData.forEach((piloto, index) => {
-        tbody.innerHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
-      });
+      tbody.innerHTML = ""; // Limpiar tabla antes de agregar nuevas filas
+      if (registroData.length > 0) {
+        registroData.forEach((piloto, index) => {
+          tbody.innerHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
+        });
+      } else {
+        tbody.innerHTML = "<tr><td colspan='2'>No hay pilotos registrados.</td></tr>";
+      }
     }
 
     // Actualizar JSONBin con el nuevo registro
