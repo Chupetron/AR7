@@ -9,7 +9,6 @@
       font-family: 'Noize Sport';
       src: url('fonts/noize_sport.ttf') format('truetype');
     }
-
     body {
       font-family: 'Noize Sport', Arial, sans-serif;
       margin: 0;
@@ -61,7 +60,8 @@
       border-radius: 10px;
       display: inline-block;
     }
-    .registro-container input, .registro-container button {
+    .registro-container input, 
+    .registro-container button {
       margin-top: 10px;
       padding: 5px;
       font-size: 16px;
@@ -72,7 +72,8 @@
       border-collapse: collapse;
       background: rgba(255, 255, 255, 0.9);
     }
-    .tabla-registrados th, .tabla-registrados td {
+    .tabla-registrados th, 
+    .tabla-registrados td {
       border: 1px solid #000;
       padding: 8px;
       text-align: center;
@@ -96,20 +97,22 @@
   </header>
   
   <div class="container">
+    <!-- Sección Próximo Evento -->
     <section class="proximo-evento">
-      <h2>Próximo Evento</h2>
+      <h2>Proximo Evento</h2>
       <div class="flyer-container">
         <img src="img/flyer.png" alt="Flyer del Evento" style="width: 100%; height: auto; border-radius: 15px;">
       </div>
     </section>
     
+    <!-- Sección PDF incrustado -->
     <section class="pdf-embed">
       <div class="pdf-container">
         <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" tabindex="0" data-auto-height="true" data-aspect-ratio="0.708" scrolling="no" width="100%" height="400" frameborder="0"></iframe>
       </div>
     </section>
     
-    <!-- Registro de Pilotos -->
+    <!-- Sección de Registro -->
     <div class="registro-container">
       <label>
         <input type="checkbox" id="aceptarReglamento">
@@ -131,45 +134,84 @@
       </thead>
       <tbody id="tablaPilotos"></tbody>
     </table>
-
   </div>
 
   <script>
+    const apiKey = "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S";
+    const getUrl = "https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b/latest";
+    const putUrl = "https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b";
+    let registroData = [];
+
+    // Obtener datos iniciales desde JSONBin y renderizar la tabla
+    async function fetchRegistroData() {
+      try {
+        const response = await fetch(getUrl, {
+          method: "GET",
+          headers: { "X-Master-Key": apiKey }
+        });
+        const data = await response.json();
+        registroData = data.record;
+        renderTabla();
+      } catch (error) {
+        console.error("Error al obtener datos de JSONBin:", error);
+      }
+    }
+
+    // Renderizar la tabla de registros
+    function renderTabla() {
+      const tbody = document.getElementById("tablaPilotos");
+      tbody.innerHTML = "";
+      registroData.forEach((piloto, index) => {
+        tbody.innerHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
+      });
+    }
+
+    // Actualizar JSONBin con el nuevo registro
+    async function actualizarRegistroJSONBin() {
+      try {
+        const response = await fetch(putUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Master-Key": apiKey
+          },
+          body: JSON.stringify({ record: registroData })
+        });
+        const data = await response.json();
+        console.log("Registro actualizado:", data);
+      } catch (error) {
+        console.error("Error al actualizar JSONBin:", error);
+      }
+    }
+
+    // Habilitar input y botón al aceptar reglamento
     document.getElementById("aceptarReglamento").addEventListener("change", function() {
       document.getElementById("gamertag").disabled = !this.checked;
       document.getElementById("registrarBtn").disabled = !this.checked;
     });
 
-    // Obtener datos del JSON Bin
-    fetch("https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b/latest", {
-      method: "GET",
-      headers: {
-        "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S"
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      let pilotos = data.record;
-      let tbody = document.getElementById("tablaPilotos");
-      pilotos.forEach((piloto, index) => {
-        let row = `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
-        tbody.innerHTML += row;
-      });
-    })
-    .catch(error => console.error("Error al cargar los pilotos:", error));
-
-    document.getElementById("registrarBtn").addEventListener("click", function() {
+    // Registrar nuevo gamertag
+    document.getElementById("registrarBtn").addEventListener("click", async function() {
       let gamertag = document.getElementById("gamertag").value.trim();
-      if (gamertag) {
-        let tbody = document.getElementById("tablaPilotos");
-        let newIndex = tbody.rows.length + 1;
-        let newRow = `<tr><td>${newIndex}</td><td>${gamertag}</td></tr>`;
-        tbody.innerHTML += newRow;
-        document.getElementById("gamertag").value = "";
-      } else {
+      if (!gamertag) {
         alert("Ingrese un Gamertag válido.");
+        return;
       }
+      // Agregar el nuevo gamertag a la lista
+      registroData.push(gamertag);
+      // Actualizar JSONBin
+      await actualizarRegistroJSONBin();
+      // Re-renderizar la tabla con los datos actualizados
+      renderTabla();
+      // Limpiar el input y resetear el checkbox y botón
+      document.getElementById("gamertag").value = "";
+      document.getElementById("aceptarReglamento").checked = false;
+      document.getElementById("gamertag").disabled = true;
+      document.getElementById("registrarBtn").disabled = true;
     });
+
+    // Cargar datos iniciales al ingresar a la página
+    fetchRegistroData();
   </script>
 </body>
 </html>
