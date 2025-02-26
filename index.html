@@ -10,7 +10,6 @@
       src: url('fonts/noize_sport.ttf') format('truetype');
     }
 
-    /* Estilos básicos */
     body {
       font-family: 'Noize Sport', Arial, sans-serif;
       margin: 0;
@@ -31,9 +30,6 @@
       text-decoration: none;
       margin-right: 15px;
     }
-    nav a:last-child {
-      margin-right: 0;
-    }
     .container {
       padding: 20px;
       text-align: center;
@@ -41,11 +37,6 @@
     .proximo-evento {
       margin: 20px 0;
     }
-    .proximo-evento h2 {
-      text-align: center;
-      font-size: 28px;
-    }
-    /* Contenedor del flyer */
     .flyer-container {
       width: 300px;
       margin: 0 auto;
@@ -55,7 +46,6 @@
       background: rgba(255, 255, 255, 0.9);
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
     }
-    /* Estilos para el PDF */
     .pdf-container {
       width: 80%;
       max-width: 600px;
@@ -64,55 +54,36 @@
       padding: 10px;
       border-radius: 10px;
     }
-    /* Espacio para secciones futuras */
-    .placeholder {
-      margin-top: 40px;
-      text-align: center;
-      font-style: italic;
-      color: #fff;
-    }
-    /* Sección de registro */
-    #registro, #tablaRegistro {
+    .registro-container {
+      margin-top: 20px;
       background: rgba(255, 255, 255, 0.9);
       padding: 15px;
-      margin: 20px auto;
       border-radius: 10px;
-      max-width: 600px;
-      box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+      display: inline-block;
     }
-    #registro label {
+    .registro-container input, .registro-container button {
+      margin-top: 10px;
+      padding: 5px;
       font-size: 16px;
     }
-    #registro input[type="text"] {
-      padding: 8px;
+    .tabla-registrados {
       width: 80%;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-    #registro button {
-      padding: 8px 15px;
-      font-size: 16px;
-      margin-top: 10px;
-      cursor: pointer;
-    }
-    /* Tabla de registros */
-    #registroTable {
-      width: 100%;
+      margin: 20px auto;
       border-collapse: collapse;
-      margin-top: 15px;
+      background: rgba(255, 255, 255, 0.9);
     }
-    #registroTable th, #registroTable td {
-      border: 1px solid #ccc;
+    .tabla-registrados th, .tabla-registrados td {
+      border: 1px solid #000;
       padding: 8px;
       text-align: center;
     }
-    #registroTable th {
-      background-color: #f2f2f2;
+    .tabla-registrados th {
+      background: rgba(51, 51, 51, 0.8);
+      color: white;
     }
   </style>
 </head>
 <body>
-  <!-- Encabezado con navegación -->
   <header>
     <div class="logo">
       <h1>AR7</h1>
@@ -125,162 +96,80 @@
   </header>
   
   <div class="container">
-    <!-- Sección Próximo Evento -->
     <section class="proximo-evento">
-      <h2>Proximo Evento</h2>
+      <h2>Próximo Evento</h2>
       <div class="flyer-container">
-        <!-- Se muestra la imagen ubicada en la carpeta img/ -->
         <img src="img/flyer.png" alt="Flyer del Evento" style="width: 100%; height: auto; border-radius: 15px;">
       </div>
     </section>
     
-    <!-- Sección de PDF incrustado -->
     <section class="pdf-embed">
       <div class="pdf-container">
-        <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" tabindex="0" data-auto-height="true" data-aspect-ratio="0.7080062794348508" scrolling="no" width="100%" height="400" frameborder="0"></iframe>
-        <p style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-size: 14px; display: block;"></p>
+        <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" tabindex="0" data-auto-height="true" data-aspect-ratio="0.708" scrolling="no" width="100%" height="400" frameborder="0"></iframe>
       </div>
     </section>
     
-    <!-- Sección de Registro -->
-    <section id="registro">
-      <h2>Registro de Participación</h2>
-      <div>
-        <input type="checkbox" id="reglamentoCheckbox">
-        <label for="reglamentoCheckbox">
-          Estoy de acuerdo con el reglamento 
-          (<a href="https://chat.whatsapp.com/CvhK0cHOKXoIEnT9ZNmwK4" target="_blank">whatsapp</a>)
-        </label>
-      </div>
-      <div>
-        <input type="text" id="gametagInput" placeholder="Ingresa tu Gametag" disabled>
-      </div>
-      <button id="registroBtn" disabled>Agregar Registro</button>
-    </section>
-    
-    <!-- Sección de Tabla de Registros -->
-    <section id="tablaRegistro">
-      <h2>Tabla de Registro</h2>
-      <table id="registroTable">
-        <!-- La tabla se llenará con JavaScript -->
-      </table>
-    </section>
-    
-    <!-- Espacio reservado para más secciones -->
-    <div class="placeholder">
-      Seguiremos con más...
+    <!-- Registro de Pilotos -->
+    <div class="registro-container">
+      <label>
+        <input type="checkbox" id="aceptarReglamento">
+        Acepto el reglamento (<a href="https://chat.whatsapp.com/CvhK0cHOKXoIEnT9ZNmwK4" target="_blank">WhatsApp</a> para consultas)
+      </label>
+      <br>
+      <input type="text" id="gamertag" placeholder="Ingrese su Gamertag" disabled>
+      <button id="registrarBtn" disabled>Registrar</button>
     </div>
+
+    <!-- Tabla de Registrados -->
+    <h2>Lista de Pilotos Registrados</h2>
+    <table class="tabla-registrados">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Piloto</th>
+        </tr>
+      </thead>
+      <tbody id="tablaPilotos"></tbody>
+    </table>
+
   </div>
-  
+
   <script>
-    const apiUrl = 'https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b';
-    const apiKey = '$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S';
-    let registroData = [];
+    document.getElementById("aceptarReglamento").addEventListener("change", function() {
+      document.getElementById("gamertag").disabled = !this.checked;
+      document.getElementById("registrarBtn").disabled = !this.checked;
+    });
 
-    // Función para obtener los datos iniciales del JSON Bin
-    async function fetchRegistroData() {
-      try {
-        const response = await fetch(apiUrl, {
-          headers: {
-            'X-Master-Key': apiKey
-          }
-        });
-        const data = await response.json();
-        registroData = data.record; // Array con los registros iniciales
-        renderTabla();
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
+    // Obtener datos del JSON Bin
+    fetch("https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b/latest", {
+      method: "GET",
+      headers: {
+        "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S"
       }
-    }
-
-    // Función para renderizar la tabla de registros
-    function renderTabla() {
-      const table = document.getElementById('registroTable');
-      table.innerHTML = '';
-
-      // Dividir los registros en Pilotos (primeras 24) y Reservas (lo que sigue)
-      const pilotos = registroData.slice(0, 24);
-      const reservas = registroData.slice(24);
-
-      // Encabezado para Pilotos
-      const pilotosHeader = document.createElement('tr');
-      const pilotosHeaderCell = document.createElement('th');
-      pilotosHeaderCell.colSpan = 2;
-      pilotosHeaderCell.textContent = 'Pilotos';
-      pilotosHeader.appendChild(pilotosHeaderCell);
-      table.appendChild(pilotosHeader);
-
-      // Filas para cada piloto
+    })
+    .then(response => response.json())
+    .then(data => {
+      let pilotos = data.record;
+      let tbody = document.getElementById("tablaPilotos");
       pilotos.forEach((piloto, index) => {
-        const row = document.createElement('tr');
-        const slotCell = document.createElement('td');
-        slotCell.textContent = index + 1;
-        const nameCell = document.createElement('td');
-        nameCell.textContent = piloto;
-        row.appendChild(slotCell);
-        row.appendChild(nameCell);
-        table.appendChild(row);
+        let row = `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
+        tbody.innerHTML += row;
       });
+    })
+    .catch(error => console.error("Error al cargar los pilotos:", error));
 
-      // Si existen reservas, agregamos un encabezado y filas correspondientes
-      if (reservas.length > 0) {
-        const reservasHeader = document.createElement('tr');
-        const reservasHeaderCell = document.createElement('th');
-        reservasHeaderCell.colSpan = 2;
-        reservasHeaderCell.textContent = 'Reservas';
-        reservasHeader.appendChild(reservasHeaderCell);
-        table.appendChild(reservasHeader);
-
-        reservas.forEach((reserva, index) => {
-          const row = document.createElement('tr');
-          const slotCell = document.createElement('td');
-          slotCell.textContent = index + 25; // Los slots de reservas inician en el 25
-          const nameCell = document.createElement('td');
-          nameCell.textContent = reserva;
-          row.appendChild(slotCell);
-          row.appendChild(nameCell);
-          table.appendChild(row);
-        });
-      }
-    }
-
-    // Habilitar/deshabilitar el input y botón según el checkbox
-    const checkbox = document.getElementById('reglamentoCheckbox');
-    const gametagInput = document.getElementById('gametagInput');
-    const registroBtn = document.getElementById('registroBtn');
-
-    checkbox.addEventListener('change', function() {
-      if (this.checked) {
-        gametagInput.disabled = false;
-        registroBtn.disabled = false;
+    document.getElementById("registrarBtn").addEventListener("click", function() {
+      let gamertag = document.getElementById("gamertag").value.trim();
+      if (gamertag) {
+        let tbody = document.getElementById("tablaPilotos");
+        let newIndex = tbody.rows.length + 1;
+        let newRow = `<tr><td>${newIndex}</td><td>${gamertag}</td></tr>`;
+        tbody.innerHTML += newRow;
+        document.getElementById("gamertag").value = "";
       } else {
-        gametagInput.disabled = true;
-        registroBtn.disabled = true;
+        alert("Ingrese un Gamertag válido.");
       }
     });
-
-    // Evento para agregar un nuevo registro a la tabla
-    registroBtn.addEventListener('click', function() {
-      const newGametag = gametagInput.value.trim();
-      if (newGametag === '') {
-        alert('Por favor, ingresa tu Gametag.');
-        return;
-      }
-      // Si existen menos de 24 registros, se agregarán como pilotos;
-      // de lo contrario se agregarán a reservas
-      registroData.push(newGametag);
-
-      // Aquí se podría agregar una actualización al JSON Bin vía PUT/POST si se requiriera
-
-      renderTabla();
-      gametagInput.value = '';
-      checkbox.checked = false;
-      gametagInput.disabled = true;
-      registroBtn.disabled = true;
-    });
-
-    // Cargar datos iniciales al cargar la página
-    fetchRegistroData();
   </script>
 </body>
 </html>
