@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evento de Carreras</title>
+  <style>
+    @font-face {
+      font-family: 'Noize Sport';
+      src: url('fonts/noize_sport.ttf') format('truetype');
+    }
+    /* Estilos básicos */
+    body {
+      font-family: 'Noize Sport', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('img/fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    header {
+      background-color: rgba(51, 51, 51, 0.8);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-right: 15px;
+    }
+    nav a:last-child {
+      margin-right: 0;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .proximo-evento {
+      margin: 20px 0;
+    }
+    .proximo-evento h2 {
+      text-align: center;
+      font-size: 28px;
+    }
+    /* Contenedor del flyer */
+    .flyer-container {
+      width: 300px;
+      margin: 0 auto;
+      border-radius: 20px;
+      border: 2px solid #ccc;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    /* Estilos para el PDF */
+    .pdf-container {
+      width: 80%;
+      max-width: 600px;
+      height: 400px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      overflow-y: auto;
+      position: relative;
+    }
+    /* Registro de pilotos */
+    .registro-pilotos {
+      width: 80%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+    }
+    .registro-pilotos input[type="text"] {
+      padding: 10px;
+      width: 60%;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .registro-pilotos button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+    .registro-pilotos button:hover {
+      background-color: #555;
+    }
+    #mensaje {
+      margin-top: 10px;
+      color: red;
+    }
+    #listaPilotos {
+      margin-top: 20px;
+      text-align: left;
+    }
+    #listaPilotos h3 {
+      margin-bottom: 5px;
+    }
+    #listaPilotos ul {
+      list-style: none;
+      padding: 0;
+    }
+    #listaPilotos li {
+      padding: 5px 0;
+      border-bottom: 1px solid #ccc;
+    }
+    /* Espacio para secciones futuras */
+    .placeholder {
+      margin-top: 40px;
+      text-align: center;
+      font-style: italic;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado con navegación -->
+  <header>
+    <div class="logo">
+      <h1>Evento de Carreras</h1>
+    </div>
+    <nav>
+      <a href="#">Inicio</a>
+      <a href="#">Campeonato en Curso</a>
+      <a href="#">Integrantes</a>
+    </nav>
+  </header>
+  
+  <div class="container">
+    <!-- Sección Próximo Evento -->
+    <section class="proximo-evento">
+      <h2>Próximo Evento</h2>
+      <div class="flyer-container">
+        <!-- Imagen fija del flyer -->
+        <img src="img/flyer.png" alt="Flyer del Evento" style="width: 100%; height: auto; border-radius: 15px;">
+      </div>
+    </section>
+    
+    <!-- Sección de PDF incrustado -->
+    <section class="pdf-embed">
+      <div class="pdf-container">
+        <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" tabindex="0" data-auto-height="true" data-aspect-ratio="0.7080062794348508" scrolling="no" width="100%" height="100%" frameborder="0"></iframe>
+        <p style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-size: 14px; display: block;">
+          <a title="View Radical Cup on Scribd" href="https://www.scribd.com/document/832763027/Radical-Cup#from_embed" style="text-decoration: underline;">Radical Cup</a> by 
+          <a title="View 23chupete's profile on Scribd" href="https://www.scribd.com/user/841690728/23chupete#from_embed" style="text-decoration: underline;">23chupete</a>
+        </p>
+        <!-- Marcador invisible para detectar el final del scroll -->
+        <div id="finalPdfMarker" style="height: 1px;"></div>
+      </div>
+    </section>
+    
+    <!-- Sección de Registro de Pilotos -->
+    <section class="registro-pilotos">
+      <h2>Registro de Pilotos</h2>
+      <div>
+        <input type="checkbox" id="reglamento" disabled>
+        <label for="reglamento">
+          Acepto el reglamento (Cualquier consulta ingresar al 
+          <a href="https://chat.whatsapp.com/CvhK0cHOKXoIEnT9ZNmwK4" target="_blank">whatsapp</a>)
+        </label>
+      </div>
+      <div id="registroForm" style="display: none; margin-top: 15px;">
+        <input type="text" id="gametag" placeholder="Ingresa tu gametag">
+        <button id="btnRegistrar">Registrar</button>
+      </div>
+      <div id="mensaje"></div>
+      <div id="listaPilotos">
+        <h3>Registrados</h3>
+        <ul id="listaPrincipal"></ul>
+        <h3>Reservas</h3>
+        <ul id="listaReservas"></ul>
+      </div>
+    </section>
+    
+    <!-- Espacio reservado para más secciones -->
+    <div class="placeholder">
+      Seguiremos con más...
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const pdfContainer = document.querySelector('.pdf-container');
+      const reglamentoCheckbox = document.getElementById('reglamento');
+      const registroForm = document.getElementById('registroForm');
+      const btnRegistrar = document.getElementById('btnRegistrar');
+      const gametagInput = document.getElementById('gametag');
+      const mensajeDiv = document.getElementById('mensaje');
+      const listaPrincipal = document.getElementById('listaPrincipal');
+      const listaReservas = document.getElementById('listaReservas');
+
+      let pilotos = [];
+
+      // Cargar registros actuales desde JSONBin (estructura: {"record": [...]})
+      async function loadPilotos(){
+        try {
+          const response = await fetch('https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b/latest', {
+            headers: {
+              'X-Master-Key': '$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S'
+            }
+          });
+          const data = await response.json();
+          pilotos = data.record || [];
+          renderPilotos();
+        } catch(error) {
+          console.error('Error cargando pilotos:', error);
+        }
+      }
+
+      // Renderizar la lista de pilotos
+      function renderPilotos(){
+        listaPrincipal.innerHTML = '';
+        listaReservas.innerHTML = '';
+        pilotos.forEach((p, index) => {
+          const li = document.createElement('li');
+          li.textContent = `${index+1}. ${p}`;
+          if(index < 24) {
+            listaPrincipal.appendChild(li);
+          } else {
+            listaReservas.appendChild(li);
+          }
+        });
+      }
+
+      // Actualizar JSONBin con la lista de pilotos
+      async function updatePilotos(){
+        try {
+          const response = await fetch('https://api.jsonbin.io/v3/b/67be4dcce41b4d34e49c623b', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Master-Key': '$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S'
+            },
+            body: JSON.stringify({ record: pilotos })
+          });
+          const data = await response.json();
+          console.log('Actualizado:', data);
+        } catch(error) {
+          console.error('Error actualizando pilotos:', error);
+        }
+      }
+
+      // Usar IntersectionObserver para habilitar el checkbox cuando se vea el marcador final
+      const finalMarker = document.getElementById('finalPdfMarker');
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting) {
+            reglamentoCheckbox.disabled = false;
+            observer.disconnect();
+          }
+        });
+      }, { root: pdfContainer, threshold: 1.0 });
+      observer.observe(finalMarker);
+
+      // Mostrar el formulario de registro al aceptar el reglamento
+      reglamentoCheckbox.addEventListener('change', function(){
+        registroForm.style.display = this.checked ? 'block' : 'none';
+      });
+
+      // Al hacer clic en "Registrar"
+      btnRegistrar.addEventListener('click', async function(){
+        const gametag = gametagInput.value.trim();
+        if(!gametag){
+          mensajeDiv.textContent = 'Ingresa un gametag válido.';
+          return;
+        }
+        // Verificar si el gametag ya existe
+        if(pilotos.includes(gametag)){
+          mensajeDiv.textContent = 'Este gametag ya está registrado.';
+          return;
+        }
+        // Agregar nuevo piloto y actualizar JSONBin
+        pilotos.push(gametag);
+        await updatePilotos();
+        renderPilotos();
+        mensajeDiv.textContent = 'Registrado exitosamente.';
+        gametagInput.value = '';
+      });
+
+      // Cargar la lista inicial de pilotos
+      loadPilotos();
+    });
+  </script>
+</body>
+</html>
