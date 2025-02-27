@@ -126,9 +126,9 @@
     <!-- Botón invisible para actualizar JSONbin -->
     <button id="actualizarJSONBinBtn" style="display: none;">Actualizar JSONbin</button>
 
-    <!-- NUEVO: Botón invisible para guardar en JSONbin -->
+    <!-- Botón invisible para guardar en JSONbin -->
     <button id="guardarJSONBinBtn" style="display: none;">Guardar en JSONbin</button>
-    <!-- NUEVO: Botón invisible para cargar datos actualizados -->
+    <!-- Botón invisible para cargar datos actualizados -->
     <button id="cargarJSONBinBtn" style="display: none;">Cargar Datos</button>
 
     <!-- Contenedor para mostrar la tabla generada desde JSON -->
@@ -243,22 +243,51 @@
     // Cargar los datos iniciales al ingresar a la página
     fetchRegistroData();
 
-    /* NUEVA FUNCIONALIDAD: Sin modificar nada del código ya existente,
-       se agregan dos botones invisibles que separan la acción de guardar de la de cargar. */
+    /* ====================================================
+       NUEVA FUNCIONALIDAD (sin modificar lo ya existente):
+       El segundo botón invisible (cargarJSONBinBtn) ahora 
+       cargará la tabla de JSONbin y la publicará debajo de la 
+       tabla actual.
+       ==================================================== */
 
-    // Evento del botón invisible que guarda en JSONbin
-    document.getElementById("guardarJSONBinBtn").addEventListener("click", async function() {
-      await actualizarRegistroJSONBin();
-      // Activar el botón invisible para cargar los datos actualizados
-      setTimeout(function() {
-        document.getElementById("cargarJSONBinBtn").click();
-      }, 1000);
-    });
+    // Remplazamos el evento del segundo botón invisible:
+    document.getElementById("cargarJSONBinBtn").onclick = async function() {
+      try {
+        const response = await fetch(getUrl, {
+          method: "GET",
+          headers: { 
+            "X-Master-Key": apiKey,
+            "X-Access-Key": accessKey
+          }
+        });
+        const data = await response.json();
+        registroData = Array.isArray(data.record) ? data.record : [];
+        renderTablaAdicional();
+      } catch (error) {
+        console.error("Error al obtener datos de JSONBin:", error);
+      }
+    };
 
-    // Evento del botón invisible que carga los datos actualizados
-    document.getElementById("cargarJSONBinBtn").addEventListener("click", async function() {
-      await fetchRegistroData();
-    });
+    // Función para renderizar la tabla adicional y publicarla debajo de la tabla actual
+    function renderTablaAdicional() {
+      let tableHTML = `<table class="tabla-registrados">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Piloto</th>
+          </tr>
+        </thead>
+        <tbody>`;
+      registroData.forEach((piloto, index) => {
+        tableHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
+      });
+      tableHTML += `</tbody></table>`;
+      // Crear un nuevo contenedor para la tabla adicional
+      let newContainer = document.createElement("div");
+      newContainer.innerHTML = tableHTML;
+      // Publicar la nueva tabla debajo de la tabla actual
+      document.getElementById("tablaContainer").insertAdjacentElement("afterend", newContainer);
+    }
   </script>
 </body>
 </html>
