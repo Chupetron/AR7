@@ -123,13 +123,8 @@
       <button id="registrarBtn" disabled>Registrar</button>
     </div>
 
-    <!-- Botón invisible para actualizar JSONbin -->
-    <button id="actualizarJSONBinBtn" style="display: none;">Actualizar JSONbin</button>
-
-    <!-- Botón invisible para guardar en JSONbin -->
-    <button id="guardarJSONBinBtn" style="display: none;">Guardar en JSONbin</button>
-    <!-- Botón invisible para cargar datos actualizados -->
-    <button id="cargarJSONBinBtn" style="display: none;">Cargar Datos</button>
+    <!-- Botón invisible para cargar la tabla de JSONbin y publicarla debajo de la actual -->
+    <button id="actualizarJSONBinBtn" style="display: none;">Cargar Datos</button>
 
     <!-- Contenedor para mostrar la tabla generada desde JSON -->
     <div id="tablaContainer"></div>
@@ -142,7 +137,7 @@
     const putUrl = "https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d";
     let registroData = [];
 
-    // Función para cargar datos desde JSONbin y renderizar la tabla en el contenedor
+    // Función para cargar datos desde JSONbin y renderizar la tabla en el contenedor principal
     async function fetchRegistroData() {
       try {
         const response = await fetch(getUrl, {
@@ -160,7 +155,7 @@
       }
     }
 
-    // Función para generar la tabla y mostrarla en el contenedor
+    // Función para generar la tabla principal y mostrarla en el contenedor
     function renderTabla() {
       let tableHTML = `<table class="tabla-registrados">
         <thead>
@@ -196,20 +191,7 @@
       }
     }
 
-    // Evento del botón invisible que actualiza JSONbin y refresca la tabla
-    document.getElementById("actualizarJSONBinBtn").addEventListener("click", async function() {
-      await actualizarRegistroJSONBin();
-      // Recargar los datos desde JSONbin para actualizar la vista
-      fetchRegistroData();
-    });
-
-    // Habilitar input y botón al aceptar el reglamento
-    document.getElementById("aceptarReglamento").addEventListener("change", function() {
-      document.getElementById("gamertag").disabled = !this.checked;
-      document.getElementById("registrarBtn").disabled = !this.checked;
-    });
-
-    // Evento para registrar un nuevo gamertag
+    // Evento del botón Registrar: añade el gamertag a la lista y actualiza JSONbin
     document.getElementById("registrarBtn").addEventListener("click", function() {
       const gamertagInput = document.getElementById("gamertag");
       let gamertag = gamertagInput.value.trim();
@@ -224,7 +206,7 @@
         return;
       }
 
-      // Agregar el nuevo gamertag a la lista local y renderizar la tabla
+      // Agregar el nuevo gamertag a la lista local y renderizar la tabla principal
       registroData.push(gamertag);
       renderTabla();
 
@@ -234,24 +216,19 @@
       gamertagInput.disabled = true;
       document.getElementById("registrarBtn").disabled = true;
 
-      // Activar el botón invisible después de 1 segundo para actualizar JSONbin y refrescar la tabla
-      setTimeout(function() {
-        document.getElementById("actualizarJSONBinBtn").click();
-      }, 1000);
+      // Actualizar JSONbin con los datos actuales
+      actualizarRegistroJSONBin();
     });
 
-    // Cargar los datos iniciales al ingresar a la página
-    fetchRegistroData();
+    // Habilitar input y botón al aceptar el reglamento
+    document.getElementById("aceptarReglamento").addEventListener("change", function() {
+      document.getElementById("gamertag").disabled = !this.checked;
+      document.getElementById("registrarBtn").disabled = !this.checked;
+    });
 
-    /* ====================================================
-       NUEVA FUNCIONALIDAD (sin modificar lo ya existente):
-       El segundo botón invisible (cargarJSONBinBtn) ahora 
-       cargará la tabla de JSONbin y la publicará debajo de la 
-       tabla actual.
-       ==================================================== */
-
-    // Remplazamos el evento del segundo botón invisible:
-    document.getElementById("cargarJSONBinBtn").onclick = async function() {
+    // Evento del botón invisible (actualizarJSONBinBtn):
+    // Carga la tabla almacenada en JSONbin y la publica debajo de la tabla principal.
+    document.getElementById("actualizarJSONBinBtn").addEventListener("click", async function() {
       try {
         const response = await fetch(getUrl, {
           method: "GET",
@@ -266,9 +243,9 @@
       } catch (error) {
         console.error("Error al obtener datos de JSONBin:", error);
       }
-    };
+    });
 
-    // Función para renderizar la tabla adicional y publicarla debajo de la tabla actual
+    // Función para renderizar la tabla adicional y publicarla debajo de la principal
     function renderTablaAdicional() {
       let tableHTML = `<table class="tabla-registrados">
         <thead>
@@ -285,9 +262,12 @@
       // Crear un nuevo contenedor para la tabla adicional
       let newContainer = document.createElement("div");
       newContainer.innerHTML = tableHTML;
-      // Publicar la nueva tabla debajo de la tabla actual
+      // Publicar la nueva tabla debajo de la tabla principal
       document.getElementById("tablaContainer").insertAdjacentElement("afterend", newContainer);
     }
+
+    // Cargar los datos iniciales al ingresar a la página
+    fetchRegistroData();
   </script>
 </body>
 </html>
