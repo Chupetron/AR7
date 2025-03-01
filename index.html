@@ -139,17 +139,15 @@
         padding: 10px 0;
         border-top: 1px solid #fff;
       }
-      .container {
-        margin-top: 300px;
-      }
-      .pdf-container {
-        width: 50%;
-        max-width: 100%;
-      }
-      .pdf-container iframe {
-        height: 300px;
-      }
-    }
+      @media (max-width: 768px) {
+  .pdf-container {
+    width: 100%; /* Mantener ancho completo */
+    padding: 0;
+  }
+  .pdf-container iframe {
+    height: 100vh; /* Ocupar el 100% del alto de la pantalla */
+  }
+}
   </style>
 </head>
 <body>
