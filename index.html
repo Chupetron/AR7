@@ -64,6 +64,7 @@
     #tablaRegistros {
       margin-top: 20px;
       border-collapse: collapse;
+      width: 100%;
     }
     #tablaRegistros th, #tablaRegistros td {
       border: 1px solid #000;
@@ -115,7 +116,7 @@
       </div>
       
       <!-- Tabla para agrupar los registrados -->
-      <table id="tablaRegistros" style="margin-top:20px;">
+      <table id="tablaRegistros">
         <thead>
           <tr>
             <th>#</th>
@@ -123,28 +124,83 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Se llenará dinámicamente -->
+          <!-- Se llenará dinámicamente o se recuperará de JSONbin -->
         </tbody>
       </table>
       
-      <!-- Contenedor para mostrar la tabla publicada en JSONbin -->
+      <!-- Contenedor para mostrar la tabla publicada (solo lectura) -->
       <div id="publicacionTabla" style="margin-top:20px;"></div>
     </section>
   </div>
   
-  <!-- Botón invisible para publicar la tabla en JSONbin (si se requiere activarlo desde otra parte) -->
+  <!-- Botón invisible para publicar la tabla en JSONbin (opcional) -->
   <button id="btnInvisiblePublicar" type="button" style="display: none;"></button>
   
   <script>
+    var registroCount = 0;
+    var maxRegistrados = 24;
+
     // Mostrar u ocultar el contenedor de registro según el checkbox
     document.getElementById('aceptarReglamento').addEventListener('change', function(){
-      var registroContainer = document.getElementById('registro-container');
-      registroContainer.style.display = this.checked ? 'block' : 'none';
+      var regContainer = document.getElementById('registro-container');
+      regContainer.style.display = this.checked ? 'block' : 'none';
     });
     
-    // Variables para el control de registros
-    var registroCount = 0;
-    var maxRegistrados = 24; // Número máximo de registros principales
+    // Función para cargar la tabla desde JSONbin y actualizar la vista
+    function cargarTabla() {
+      fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S"
+        }
+      })
+      .then(response => response.json())
+      .then(json => {
+        var tablaHTML = json.record.tablaPosicionesGenerales;
+        // Actualiza el contenedor de la tabla publicada
+        document.getElementById('publicacionTabla').innerHTML = "<h3>Tabla Publicada</h3>" + tablaHTML;
+        
+        // Actualiza el cuerpo de la tabla de registro para continuar la numeración
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = tablaHTML;
+        var newTbody = tempDiv.querySelector('tbody');
+        if(newTbody) {
+          var registroTbody = document.getElementById('tablaRegistros').querySelector('tbody');
+          registroTbody.innerHTML = newTbody.innerHTML;
+          registroCount = newTbody.children.length;
+        }
+      })
+      .catch(err => {
+        console.error("Error al cargar la tabla desde JSONbin:", err);
+      });
+    }
+    
+    // Función para publicar la tabla actual en JSONbin y actualizar la vista
+    function publicarTabla() {
+      var table = document.getElementById('tablaRegistros');
+      var html = table.outerHTML;
+      var data = { "tablaPosicionesGenerales": html };
+    
+      fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(json => {
+        console.log("Tabla publicada exitosamente", json);
+        // Actualiza la vista sin recargar la página
+        cargarTabla();
+      })
+      .catch(err => {
+        console.error("Error al publicar la tabla:", err);
+        alert("Error al publicar la tabla. Revisa la consola para más detalles.");
+      });
+    }
     
     // Evento para el botón de registro
     document.getElementById('btnRegistrar').addEventListener('click', function(){
@@ -155,14 +211,13 @@
         return;
       }
       
-      // Agregar el nuevo registro a la tabla
+      // Agregar el nuevo registro a la tabla de registro
       registroCount++;
       var tbody = document.getElementById('tablaRegistros').querySelector('tbody');
       var newRow = document.createElement('tr');
       var numCell = document.createElement('td');
       var gametagCell = document.createElement('td');
     
-      // Asigna número o "Reserva" según la cantidad de registros
       if (registroCount <= maxRegistrados) {
         numCell.textContent = registroCount;
       } else {
@@ -176,47 +231,20 @@
       // Limpiar el campo de Gametag
       gametagInput.value = '';
       
-      // Publicar la tabla actualizada en JSONbin y mostrarla en la misma página
+      // Publicar la tabla actualizada en JSONbin
       publicarTabla();
     });
     
-    // Evento para el botón invisible (por si se requiere activación manual)
+    // Evento para el botón invisible (opcional)
     var btnInvisible = document.getElementById('btnInvisiblePublicar');
     btnInvisible.addEventListener('click', function(){
       publicarTabla();
     });
     
-    // Función para publicar la tabla en JSONbin y mostrarla en el contenedor "publicacionTabla"
-    function publicarTabla() {
-      var table = document.getElementById('tablaRegistros');
-      // Actualiza atributos de inputs si existieran
-      var inputs = table.querySelectorAll("input");
-      inputs.forEach(function(input) {
-        input.setAttribute("value", input.value);
-      });
-    
-      var html = table.outerHTML;
-      var data = { "tablaPosicionesGenerales": html };
-    
-      fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", { // Nuevo Bin ID
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S" // Nueva X-Master-Key
-        },
-        body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(json => {
-        console.log("Tabla publicada exitosamente", json);
-        // Mostrar la tabla publicada en el contenedor
-        document.getElementById('publicacionTabla').innerHTML = "<h3>Tabla Publicada</h3>" + html;
-      })
-      .catch(err => {
-        console.error("Error al publicar la tabla:", err);
-        alert("Error al publicar la tabla. Revisa la consola para más detalles.");
-      });
-    }
+    // Al cargar la página, se recupera la tabla publicada desde JSONbin
+    window.onload = function() {
+      cargarTabla();
+    };
   </script>
 </body>
 </html>
