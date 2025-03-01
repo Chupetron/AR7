@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR7</title>
   <style>
-    /* Fuentes y estilos globales */
     @font-face {
       font-family: 'Noize Sport';
       src: url('fonts/noize_sport.ttf') format('truetype');
@@ -17,8 +16,7 @@
       background: url('img/fondo.jpg') no-repeat center center fixed;
       background-size: cover;
     }
-    
-    /* Video Banner */
+    /* Contenedor del video de fondo */
     .video-container {
       position: relative;
       width: 100%;
@@ -34,8 +32,7 @@
       object-fit: cover;
       opacity: 0.8;
     }
-    
-    /* Header y menú */
+    /* Header sobre el video */
     header {
       position: absolute;
       top: 0;
@@ -48,35 +45,20 @@
       align-items: center;
       z-index: 10;
     }
-    .logo h1 {
-      margin: 0;
-    }
-    .nav-menu {
-      display: flex;
-      gap: 15px;
-    }
-    .nav-menu a {
+    nav a {
       color: #fff;
       text-decoration: none;
+      margin-right: 15px;
     }
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 24px;
-    }
-    
-    /* Contenedor principal: se posiciona debajo del video */
+    /* Contenedor principal: se sitúa debajo del video */
     .container {
-      padding: 20px;
-      text-align: center;
-      margin-top: 150px; /* Acerca los elementos al video */
-    }
-    
-    /* Flyer y PDF */
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px; /* Puedes ajustar el valor para acercarlo más */
+}
+    /* Flyer superpuesto al video */
     .proximo-evento {
-      margin: -80px auto 20px;
+  margin: -100px auto 10px; /* Reduce el espacio entre el video y el flyer */
       position: relative;
       z-index: 5;
     }
@@ -97,8 +79,7 @@
       padding: 10px;
       border-radius: 10px;
     }
-    
-    /* Sección de Registro */
+    /* Sección de registro */
     .registro {
       margin-top: 30px;
       background: rgba(255, 255, 255, 0.9);
@@ -115,45 +96,6 @@
       border: 1px solid #000;
       padding: 5px 10px;
     }
-    
-    /* Responsive: ajustes para móviles */
-    @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
-      .nav-menu {
-        display: none;
-        flex-direction: column;
-        background: rgba(51,51,51,0.8);
-        width: 100%;
-        text-align: center;
-        position: absolute;
-        top: 50px;
-        left: 0;
-      }
-      .nav-menu a {
-        padding: 10px 0;
-        border-top: 1px solid #fff;
-      }
-      .container {
-        margin-top: 120px;
-      }
-      .pdf-container {
-        width: 95%;
-        max-width: 100%;
-      }
-      .pdf-container iframe {
-        height: 300px;
-      }
-    }
-    @media (min-width: 769px) {
-      .menu-toggle {
-        display: none;
-      }
-      .nav-menu {
-        display: flex;
-      }
-    }
   </style>
 </head>
 <body>
@@ -165,13 +107,12 @@
     </video>
   </div>
   
-  <!-- Header con menú responsive -->
+  <!-- Header sobre el video -->
   <header>
     <div class="logo">
       <h1>AR7</h1>
     </div>
-    <button class="menu-toggle" id="menuToggle">☰</button>
-    <nav class="nav-menu" id="navMenu">
+    <nav>
       <a href="#">Inicio</a>
       <a href="#">Campeonato en Curso</a>
       <a href="#">Integrantes</a>
@@ -212,7 +153,7 @@
         <button id="btnRegistrar" type="button">Registrar</button>
       </div>
       
-      <!-- Tabla para mostrar los registros -->
+      <!-- Tabla única para mostrar los registros -->
       <table id="tablaRegistros">
         <thead>
           <tr>
@@ -231,16 +172,6 @@
   <button id="btnInvisiblePublicar" type="button" style="display: none;"></button>
   
   <script>
-    // Toggle del menú en móviles
-    document.getElementById('menuToggle').addEventListener('click', function() {
-      var navMenu = document.getElementById('navMenu');
-      if (navMenu.style.display === "flex") {
-        navMenu.style.display = "none";
-      } else {
-        navMenu.style.display = "flex";
-      }
-    });
-    
     var registroCount = 0;
     var maxRegistrados = 24;
     
@@ -250,7 +181,7 @@
       regContainer.style.display = this.checked ? 'block' : 'none';
     });
     
-    // Función para cargar la tabla guardada en JSONbin
+    // Carga la tabla guardada en JSONbin
     function cargarTabla() {
       fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
         method: "GET",
@@ -276,7 +207,7 @@
       });
     }
     
-    // Función para publicar la tabla actual en JSONbin
+    // Publica la tabla actual en JSONbin
     function publicarTabla() {
       var table = document.getElementById('tablaRegistros');
       var html = table.outerHTML;
@@ -309,7 +240,7 @@
         alert('Por favor, ingrese su Gametag.');
         return;
       }
-      // Verifica que no se registre un gametag duplicado (insensible a mayúsculas/minúsculas)
+      // Verificar que no se registre un gametag duplicado (ignora mayúsculas/minúsculas)
       var existe = false;
       var rows = document.getElementById('tablaRegistros').querySelectorAll('tbody tr');
       rows.forEach(function(row) {
