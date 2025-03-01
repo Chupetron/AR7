@@ -98,7 +98,7 @@
       </div>
     </section>
     
-    <!-- Nueva sección de registro -->
+    <!-- Sección de registro y tabla única -->
     <section class="registro">
       <!-- Checkbox para aceptar el reglamento con link a WhatsApp -->
       <div id="reglamento-container">
@@ -115,7 +115,7 @@
         <button id="btnRegistrar" type="button">Registrar</button>
       </div>
       
-      <!-- Tabla para agrupar los registrados -->
+      <!-- Única tabla para registro y vista publicada -->
       <table id="tablaRegistros">
         <thead>
           <tr>
@@ -124,29 +124,26 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Se llenará dinámicamente o se recuperará de JSONbin -->
+          <!-- Se llenará dinámicamente o se recuperará desde JSONbin -->
         </tbody>
       </table>
-      
-      <!-- Contenedor para mostrar la tabla publicada (solo lectura) -->
-      <div id="publicacionTabla" style="margin-top:20px;"></div>
     </section>
   </div>
   
-  <!-- Botón invisible para publicar la tabla en JSONbin (opcional) -->
+  <!-- Botón invisible (opcional) -->
   <button id="btnInvisiblePublicar" type="button" style="display: none;"></button>
   
   <script>
     var registroCount = 0;
     var maxRegistrados = 24;
 
-    // Mostrar u ocultar el contenedor de registro según el checkbox
+    // Muestra el formulario de registro si se acepta el reglamento.
     document.getElementById('aceptarReglamento').addEventListener('change', function(){
       var regContainer = document.getElementById('registro-container');
       regContainer.style.display = this.checked ? 'block' : 'none';
     });
     
-    // Función para cargar la tabla desde JSONbin y actualizar la vista
+    // Carga la tabla guardada en JSONbin.
     function cargarTabla() {
       fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
         method: "GET",
@@ -158,10 +155,7 @@
       .then(response => response.json())
       .then(json => {
         var tablaHTML = json.record.tablaPosicionesGenerales;
-        // Actualiza el contenedor de la tabla publicada
-        document.getElementById('publicacionTabla').innerHTML = "<h3>Tabla Publicada</h3>" + tablaHTML;
-        
-        // Actualiza el cuerpo de la tabla de registro para continuar la numeración
+        // Utilizamos un elemento temporal para extraer el tbody.
         var tempDiv = document.createElement('div');
         tempDiv.innerHTML = tablaHTML;
         var newTbody = tempDiv.querySelector('tbody');
@@ -176,7 +170,7 @@
       });
     }
     
-    // Función para publicar la tabla actual en JSONbin y actualizar la vista
+    // Publica la tabla actual en JSONbin.
     function publicarTabla() {
       var table = document.getElementById('tablaRegistros');
       var html = table.outerHTML;
@@ -193,7 +187,6 @@
       .then(response => response.json())
       .then(json => {
         console.log("Tabla publicada exitosamente", json);
-        // Actualiza la vista sin recargar la página
         cargarTabla();
       })
       .catch(err => {
@@ -202,7 +195,7 @@
       });
     }
     
-    // Evento para el botón de registro
+    // Evento para el botón de registro.
     document.getElementById('btnRegistrar').addEventListener('click', function(){
       var gametagInput = document.getElementById('gametag');
       var gametagValue = gametagInput.value.trim();
@@ -211,7 +204,21 @@
         return;
       }
       
-      // Agregar el nuevo registro a la tabla de registro
+      // Verifica que el gametag no esté ya registrado.
+      var existe = false;
+      var rows = document.getElementById('tablaRegistros').querySelectorAll('tbody tr');
+      rows.forEach(function(row) {
+        var existente = row.cells[1].textContent.trim().toLowerCase();
+        if (existente === gametagValue.toLowerCase()) {
+          existe = true;
+        }
+      });
+      if (existe) {
+        alert("Este Gametag ya ha sido registrado.");
+        return;
+      }
+      
+      // Agrega el nuevo registro.
       registroCount++;
       var tbody = document.getElementById('tablaRegistros').querySelector('tbody');
       var newRow = document.createElement('tr');
@@ -228,21 +235,19 @@
       newRow.appendChild(gametagCell);
       tbody.appendChild(newRow);
       
-      // Limpiar el campo de Gametag
       gametagInput.value = '';
       
-      // Publicar la tabla actualizada en JSONbin
+      // Publica la tabla actualizada en JSONbin.
       publicarTabla();
     });
     
-    // Evento para el botón invisible (opcional)
+    // Evento para el botón invisible (opcional).
     var btnInvisible = document.getElementById('btnInvisiblePublicar');
     btnInvisible.addEventListener('click', function(){
       publicarTabla();
     });
     
-    // Al cargar la página, se recupera la tabla publicada desde JSONbin
-    window.onload = function() {
+    window.onload = function(){
       cargarTabla();
     };
   </script>
