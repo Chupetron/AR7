@@ -16,25 +16,51 @@
       background: url('img/fondo.jpg') no-repeat center center fixed;
       background-size: cover;
     }
+    /* Contenedor del video de fondo */
+    .video-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+    }
+    .video-container video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.8;
+    }
+    /* Header sobre el video */
     header {
+      position: absolute;
+      top: 0;
+      width: 100%;
       background-color: rgba(51, 51, 51, 0.8);
       color: #fff;
       padding: 10px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      z-index: 10;
     }
     nav a {
       color: #fff;
       text-decoration: none;
       margin-right: 15px;
     }
+    /* Contenedor principal: se sitúa debajo del video */
     .container {
-      padding: 20px;
-      text-align: center;
-    }
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px; /* Puedes ajustar el valor para acercarlo más */
+}
+    /* Flyer superpuesto al video */
     .proximo-evento {
-      margin: 20px 0;
+  margin: -100px auto 10px; /* Reduce el espacio entre el video y el flyer */
+      position: relative;
+      z-index: 5;
     }
     .flyer-container {
       width: 300px;
@@ -53,7 +79,7 @@
       padding: 10px;
       border-radius: 10px;
     }
-    /* Estilos para la sección de registro */
+    /* Sección de registro */
     .registro {
       margin-top: 30px;
       background: rgba(255, 255, 255, 0.9);
@@ -73,6 +99,15 @@
   </style>
 </head>
 <body>
+  <!-- Video Banner -->
+  <div class="video-container">
+    <video autoplay muted loop playsinline>
+      <source src="vid/banner.mp4" type="video/mp4">
+      Tu navegador no soporta video HTML5.
+    </video>
+  </div>
+  
+  <!-- Header sobre el video -->
   <header>
     <div class="logo">
       <h1>AR7</h1>
@@ -84,7 +119,9 @@
     </nav>
   </header>
   
+  <!-- Contenido principal -->
   <div class="container">
+    <!-- Flyer de Evento -->
     <section class="proximo-evento">
       <h2>Próximo Evento</h2>
       <div class="flyer-container">
@@ -92,15 +129,16 @@
       </div>
     </section>
     
+    <!-- PDF Embed -->
     <section class="pdf-embed">
       <div class="pdf-container">
         <iframe src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" width="100%" height="400" frameborder="0"></iframe>
       </div>
     </section>
     
-    <!-- Sección de registro y tabla única -->
+    <!-- Sección de Registro -->
     <section class="registro">
-      <!-- Checkbox para aceptar el reglamento con link a WhatsApp -->
+      <!-- Checkbox para aceptar el reglamento -->
       <div id="reglamento-container">
         <input type="checkbox" id="aceptarReglamento">
         <label for="aceptarReglamento">
@@ -109,13 +147,13 @@
         </label>
       </div>
       
-      <!-- Contenedor de registro (oculto inicialmente) -->
-      <div id="registro-container" style="display: none; margin-top:10px;">
+      <!-- Formulario de registro (oculto inicialmente) -->
+      <div id="registro-container" style="display: none; margin-top: 10px;">
         <input type="text" id="gametag" placeholder="Ingrese su Gametag">
         <button id="btnRegistrar" type="button">Registrar</button>
       </div>
       
-      <!-- Única tabla para registro y vista publicada -->
+      <!-- Tabla única para mostrar los registros -->
       <table id="tablaRegistros">
         <thead>
           <tr>
@@ -136,14 +174,14 @@
   <script>
     var registroCount = 0;
     var maxRegistrados = 24;
-
-    // Muestra el formulario de registro si se acepta el reglamento.
+    
+    // Muestra el formulario de registro cuando se acepta el reglamento
     document.getElementById('aceptarReglamento').addEventListener('change', function(){
       var regContainer = document.getElementById('registro-container');
       regContainer.style.display = this.checked ? 'block' : 'none';
     });
     
-    // Carga la tabla guardada en JSONbin.
+    // Carga la tabla guardada en JSONbin
     function cargarTabla() {
       fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
         method: "GET",
@@ -155,7 +193,6 @@
       .then(response => response.json())
       .then(json => {
         var tablaHTML = json.record.tablaPosicionesGenerales;
-        // Utilizamos un elemento temporal para extraer el tbody.
         var tempDiv = document.createElement('div');
         tempDiv.innerHTML = tablaHTML;
         var newTbody = tempDiv.querySelector('tbody');
@@ -170,12 +207,12 @@
       });
     }
     
-    // Publica la tabla actual en JSONbin.
+    // Publica la tabla actual en JSONbin
     function publicarTabla() {
       var table = document.getElementById('tablaRegistros');
       var html = table.outerHTML;
       var data = { "tablaPosicionesGenerales": html };
-    
+      
       fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", {
         method: "PUT",
         headers: {
@@ -195,7 +232,7 @@
       });
     }
     
-    // Evento para el botón de registro.
+    // Evento para el botón de registro
     document.getElementById('btnRegistrar').addEventListener('click', function(){
       var gametagInput = document.getElementById('gametag');
       var gametagValue = gametagInput.value.trim();
@@ -203,8 +240,7 @@
         alert('Por favor, ingrese su Gametag.');
         return;
       }
-      
-      // Verifica que el gametag no esté ya registrado.
+      // Verificar que no se registre un gametag duplicado (ignora mayúsculas/minúsculas)
       var existe = false;
       var rows = document.getElementById('tablaRegistros').querySelectorAll('tbody tr');
       rows.forEach(function(row) {
@@ -218,13 +254,13 @@
         return;
       }
       
-      // Agrega el nuevo registro.
+      // Agregar el nuevo registro
       registroCount++;
       var tbody = document.getElementById('tablaRegistros').querySelector('tbody');
       var newRow = document.createElement('tr');
       var numCell = document.createElement('td');
       var gametagCell = document.createElement('td');
-    
+      
       if (registroCount <= maxRegistrados) {
         numCell.textContent = registroCount;
       } else {
@@ -237,11 +273,11 @@
       
       gametagInput.value = '';
       
-      // Publica la tabla actualizada en JSONbin.
+      // Publicar la tabla actualizada en JSONbin
       publicarTabla();
     });
     
-    // Evento para el botón invisible (opcional).
+    // Evento para el botón invisible (opcional)
     var btnInvisible = document.getElementById('btnInvisiblePublicar');
     btnInvisible.addEventListener('click', function(){
       publicarTabla();
