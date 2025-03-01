@@ -53,34 +53,21 @@
       padding: 10px;
       border-radius: 10px;
     }
-    .registro-container {
-      margin-top: 20px;
+    /* Estilos para la sección de registro */
+    .registro {
+      margin-top: 30px;
       background: rgba(255, 255, 255, 0.9);
       padding: 15px;
       border-radius: 10px;
       display: inline-block;
     }
-    .registro-container input, 
-    .registro-container button {
-      margin-top: 10px;
-      padding: 5px;
-      font-size: 16px;
-    }
-    .tabla-registrados {
-      width: 80%;
-      margin: 20px auto;
+    #tablaRegistros {
+      margin-top: 20px;
       border-collapse: collapse;
-      background: rgba(255, 255, 255, 0.9);
     }
-    .tabla-registrados th, 
-    .tabla-registrados td {
+    #tablaRegistros th, #tablaRegistros td {
       border: 1px solid #000;
-      padding: 8px;
-      text-align: center;
-    }
-    .tabla-registrados th {
-      background: rgba(51, 51, 51, 0.8);
-      color: white;
+      padding: 5px 10px;
     }
   </style>
 </head>
@@ -97,7 +84,6 @@
   </header>
   
   <div class="container">
-    <!-- Sección Próximo Evento -->
     <section class="proximo-evento">
       <h2>Próximo Evento</h2>
       <div class="flyer-container">
@@ -105,169 +91,132 @@
       </div>
     </section>
     
-    <!-- Sección PDF incrustado -->
     <section class="pdf-embed">
       <div class="pdf-container">
-        <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" tabindex="0" data-auto-height="true" data-aspect-ratio="0.708" scrolling="no" width="100%" height="400" frameborder="0"></iframe>
+        <iframe src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq" width="100%" height="400" frameborder="0"></iframe>
       </div>
     </section>
     
-    <!-- Sección de Registro -->
-    <div class="registro-container">
-      <label>
+    <!-- Nueva sección de registro -->
+    <section class="registro">
+      <!-- Checkbox para aceptar el reglamento con link a WhatsApp -->
+      <div id="reglamento-container">
         <input type="checkbox" id="aceptarReglamento">
-        Acepto el reglamento (<a href="https://chat.whatsapp.com/CvhK0cHOKXoIEnT9ZNmwK4" target="_blank">WhatsApp</a> para consultas)
-      </label>
-      <br>
-      <input type="text" id="gamertag" placeholder="Ingrese su Gamertag" disabled>
-      <button id="registrarBtn" disabled>Registrar</button>
-    </div>
-
-    <!-- Botón invisible para cargar la tabla de JSONbin y publicarla debajo de la actual -->
-    <button id="actualizarJSONBinBtn" style="display: none;">Cargar Datos</button>
-
-    <!-- Contenedor para mostrar la tabla generada desde JSON -->
-    <div id="tablaContainer"></div>
-  </div>
-
-  <script>
-    const apiKey = "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S";
-    const accessKey = "$2a$10$ZNSzqRtqfkZWnJOM9.ZmjOYPx3CV/opN4.SCeDVQPq/k87Dkwifn2";
-    const getUrl = "https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d/latest";
-    const putUrl = "https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d";
-    let registroData = [];
-
-    // Función para cargar datos desde JSONbin y renderizar la tabla en el contenedor principal
-    async function fetchRegistroData() {
-      try {
-        const response = await fetch(getUrl, {
-          method: "GET",
-          headers: { 
-            "X-Master-Key": apiKey,
-            "X-Access-Key": accessKey
-          }
-        });
-        const data = await response.json();
-        registroData = Array.isArray(data.record) ? data.record : [];
-        renderTabla();
-      } catch (error) {
-        console.error("Error al obtener datos de JSONBin:", error);
-      }
-    }
-
-    // Función para generar la tabla principal y mostrarla en el contenedor
-    function renderTabla() {
-      let tableHTML = `<table class="tabla-registrados">
+        <label for="aceptarReglamento">
+          Acepto el reglamento del pdf (por más información 
+          <a href="https://chat.whatsapp.com/CvhK0cHOKXoIEnT9ZNmwK4" target="_blank">whatsapp</a>)
+        </label>
+      </div>
+      
+      <!-- Contenedor de registro (oculto inicialmente) -->
+      <div id="registro-container" style="display: none; margin-top:10px;">
+        <input type="text" id="gametag" placeholder="Ingrese su Gametag">
+        <button id="btnRegistrar" type="button">Registrar</button>
+      </div>
+      
+      <!-- Tabla para agrupar los registrados -->
+      <table id="tablaRegistros" style="margin-top:20px;">
         <thead>
           <tr>
             <th>#</th>
-            <th>Piloto</th>
+            <th>Gametag</th>
           </tr>
         </thead>
-        <tbody>`;
-      registroData.forEach((piloto, index) => {
-        tableHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
-      });
-      tableHTML += `</tbody></table>`;
-      document.getElementById("tablaContainer").innerHTML = tableHTML;
-    }
-
-    // Función para actualizar JSONbin con los datos actuales
-    async function actualizarRegistroJSONBin() {
-      try {
-        const response = await fetch(putUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Master-Key": apiKey,
-            "X-Access-Key": accessKey
-          },
-          body: JSON.stringify({ record: registroData })
-        });
-        const data = await response.json();
-        console.log("Registro actualizado:", data);
-      } catch (error) {
-        console.error("Error al actualizar JSONBin:", error);
-      }
-    }
-
-    // Evento del botón Registrar: añade el gamertag a la lista y actualiza JSONbin
-    document.getElementById("registrarBtn").addEventListener("click", function() {
-      const gamertagInput = document.getElementById("gamertag");
-      let gamertag = gamertagInput.value.trim();
-      if (!gamertag) {
-        alert("Ingrese un Gamertag válido.");
+        <tbody>
+          <!-- Se llenará dinámicamente -->
+        </tbody>
+      </table>
+      
+      <!-- Contenedor para mostrar la tabla publicada en JSONbin -->
+      <div id="publicacionTabla" style="margin-top:20px;"></div>
+    </section>
+  </div>
+  
+  <!-- Botón invisible para publicar la tabla en JSONbin (si se requiere activarlo desde otra parte) -->
+  <button id="btnInvisiblePublicar" type="button" style="display: none;"></button>
+  
+  <script>
+    // Mostrar u ocultar el contenedor de registro según el checkbox
+    document.getElementById('aceptarReglamento').addEventListener('change', function(){
+      var registroContainer = document.getElementById('registro-container');
+      registroContainer.style.display = this.checked ? 'block' : 'none';
+    });
+    
+    // Variables para el control de registros
+    var registroCount = 0;
+    var maxRegistrados = 24; // Número máximo de registros principales
+    
+    // Evento para el botón de registro
+    document.getElementById('btnRegistrar').addEventListener('click', function(){
+      var gametagInput = document.getElementById('gametag');
+      var gametagValue = gametagInput.value.trim();
+      if(gametagValue === ''){
+        alert('Por favor, ingrese su Gametag.');
         return;
       }
       
-      // Verificar si el gamertag ya existe
-      if (registroData.includes(gamertag)) {
-        alert("Este Gamertag ya está registrado.");
-        return;
+      // Agregar el nuevo registro a la tabla
+      registroCount++;
+      var tbody = document.getElementById('tablaRegistros').querySelector('tbody');
+      var newRow = document.createElement('tr');
+      var numCell = document.createElement('td');
+      var gametagCell = document.createElement('td');
+    
+      // Asigna número o "Reserva" según la cantidad de registros
+      if (registroCount <= maxRegistrados) {
+        numCell.textContent = registroCount;
+      } else {
+        numCell.textContent = "Reserva " + (registroCount - maxRegistrados);
       }
-
-      // Agregar el nuevo gamertag a la lista local y renderizar la tabla principal
-      registroData.push(gamertag);
-      renderTabla();
-
-      // Resetear el input y el checkbox
-      gamertagInput.value = "";
-      document.getElementById("aceptarReglamento").checked = false;
-      gamertagInput.disabled = true;
-      document.getElementById("registrarBtn").disabled = true;
-
-      // Actualizar JSONbin con los datos actuales
-      actualizarRegistroJSONBin();
+      gametagCell.textContent = gametagValue;
+      newRow.appendChild(numCell);
+      newRow.appendChild(gametagCell);
+      tbody.appendChild(newRow);
+      
+      // Limpiar el campo de Gametag
+      gametagInput.value = '';
+      
+      // Publicar la tabla actualizada en JSONbin y mostrarla en la misma página
+      publicarTabla();
     });
-
-    // Habilitar input y botón al aceptar el reglamento
-    document.getElementById("aceptarReglamento").addEventListener("change", function() {
-      document.getElementById("gamertag").disabled = !this.checked;
-      document.getElementById("registrarBtn").disabled = !this.checked;
+    
+    // Evento para el botón invisible (por si se requiere activación manual)
+    var btnInvisible = document.getElementById('btnInvisiblePublicar');
+    btnInvisible.addEventListener('click', function(){
+      publicarTabla();
     });
-
-    // Evento del botón invisible (actualizarJSONBinBtn):
-    // Carga la tabla almacenada en JSONbin y la publica debajo de la tabla principal.
-    document.getElementById("actualizarJSONBinBtn").addEventListener("click", async function() {
-      try {
-        const response = await fetch(getUrl, {
-          method: "GET",
-          headers: { 
-            "X-Master-Key": apiKey,
-            "X-Access-Key": accessKey
-          }
-        });
-        const data = await response.json();
-        registroData = Array.isArray(data.record) ? data.record : [];
-        renderTablaAdicional();
-      } catch (error) {
-        console.error("Error al obtener datos de JSONBin:", error);
-      }
-    });
-
-    // Función para renderizar la tabla adicional y publicarla debajo de la principal
-    function renderTablaAdicional() {
-      let tableHTML = `<table class="tabla-registrados">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Piloto</th>
-          </tr>
-        </thead>
-        <tbody>`;
-      registroData.forEach((piloto, index) => {
-        tableHTML += `<tr><td>${index + 1}</td><td>${piloto}</td></tr>`;
+    
+    // Función para publicar la tabla en JSONbin y mostrarla en el contenedor "publicacionTabla"
+    function publicarTabla() {
+      var table = document.getElementById('tablaRegistros');
+      // Actualiza atributos de inputs si existieran
+      var inputs = table.querySelectorAll("input");
+      inputs.forEach(function(input) {
+        input.setAttribute("value", input.value);
       });
-      tableHTML += `</tbody></table>`;
-      // Crear un nuevo contenedor para la tabla adicional
-      let newContainer = document.createElement("div");
-      newContainer.innerHTML = tableHTML;
-      // Publicar la nueva tabla debajo de la tabla principal
-      document.getElementById("tablaContainer").insertAdjacentElement("afterend", newContainer);
+    
+      var html = table.outerHTML;
+      var data = { "tablaPosicionesGenerales": html };
+    
+      fetch("https://api.jsonbin.io/v3/b/67be8a41e41b4d34e49c8d5d", { // Nuevo Bin ID
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S" // Nueva X-Master-Key
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(json => {
+        console.log("Tabla publicada exitosamente", json);
+        // Mostrar la tabla publicada en el contenedor
+        document.getElementById('publicacionTabla').innerHTML = "<h3>Tabla Publicada</h3>" + html;
+      })
+      .catch(err => {
+        console.error("Error al publicar la tabla:", err);
+        alert("Error al publicar la tabla. Revisa la consola para más detalles.");
+      });
     }
-
-    // Cargar los datos iniciales al ingresar a la página
-    fetchRegistroData();
   </script>
 </body>
 </html>
