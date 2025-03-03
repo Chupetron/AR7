@@ -93,11 +93,6 @@
       width: 80%;
       max-width: 600px;
     }
-    .pdf-embed iframe {
-      width: 100%;
-      height: 600px;
-      border: none;
-    }
     
     /* Registro */
     .registro {
@@ -142,16 +137,6 @@
       .pdf-embed {
         width: 100%;
         max-width: 100%;
-        position: relative;
-        padding-bottom: 70.8%; /* Calculado según data-aspect-ratio ~0.708 */
-        height: 0;
-      }
-      .pdf-embed iframe {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
       }
     }
   </style>
@@ -188,9 +173,10 @@
     
     <!-- PDF Embed insertado -->
     <section class="pdf-embed">
-      <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq&scribd_rebrand=true" tabindex="0" data-auto-height="true" data-aspect-ratio="0.7080062794348508" scrolling="no" frameborder="0"></iframe>
+      <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq&scribd_rebrand=true" tabindex="0" data-auto-height="true" data-aspect-ratio="0.7080062794348508" scrolling="no" width="100%" height="600" frameborder="0"></iframe>
       <p style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-size: 14px; line-height: normal; display: block;">
-        
+        <a title="View Radical Cup on Scribd" href="https://www.scribd.com/document/832763027/Radical-Cup#from_embed" style="text-decoration: underline;">Radical Cup</a> by <a title="View 23chupete's profile on Scribd" href="https://www.scribd.com/user/841690728/23chupete#from_embed" style="text-decoration: underline;">23chupete</a>
+      </p>
     </section>
     
     <!-- Sección de Registro -->
