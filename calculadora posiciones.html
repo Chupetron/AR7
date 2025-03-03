@@ -305,7 +305,7 @@
       document.getElementById('mensaje').innerText = 'Puntos actualizados.';
     }
 
-    // Función para publicar la tabla "Posiciones Generales" en resultados.html usando JSONbin.io
+    // Función para publicar la tabla "Posiciones Generales" en evento en curso.html usando JSONbin.io
     function publicarTabla() {
       var table = document.getElementById('posicionesGenerales');
 
@@ -329,7 +329,7 @@
       .then(response => response.json())
       .then(json => {
         console.log("Tabla publicada exitosamente", json);
-        window.open('resultados.html', '_blank');
+        window.open('evento en curso.html', '_blank');
       })
       .catch(err => {
         console.error("Error al publicar la tabla:", err);
