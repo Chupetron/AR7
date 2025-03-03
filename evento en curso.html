@@ -5,7 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Evento en Curso</title>
   <style>
-    /* Estilos generales */
+    @font-face {
+  font-family: 'NoizeSport';
+  src: url('fonts/noize_sport.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Aplicar la fuente a todo el documento */
+body {
+  font-family: 'NoizeSport', sans-serif;
+}
+
+	/* Estilos generales */
     body {
       display: flex;
       flex-direction: column; /* Para colocar el flyer y la tabla en columna */
@@ -28,7 +40,7 @@
       position: relative;
       width: 528px;
       height: 632px;
-      background-image: url('podio/fondopodio5.jpg'); /* Cambia la ruta del fondo */
+      background-image: url('podio/laguna.jpg'); /* Cambia la ruta del fondo */
       background-size: cover;
       background-position: center;
       border-radius: 20px; /* Bordes redondeados */
@@ -133,6 +145,9 @@
   </style>
 </head>
 <body>
+  <!-- Título para el flyer -->
+  <h2 style="color: white; text-align: center; margin-bottom: 30px;">Resultados de la Ultima Carrera</h2>
+
   <div class="flyer-wrapper">
     <div class="flyer-background">
       <div class="flyer-container">
@@ -150,8 +165,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Título para la tabla de posiciones generales -->
+  <h2 style="color: white; text-align: center; margin-top: 10px;">Resultados Generales</h2>
+
   <!-- Contenedor para la tabla de Posiciones Generales publicada -->
   <div id="tablaPublicada"></div>
+
 
   <script>
     // Al cargar la página, se obtiene la tabla publicada desde JSONbin.io
