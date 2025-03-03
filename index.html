@@ -60,7 +60,7 @@
       display: none;
       background: none;
       border: none;
-      font-size: 12px;
+      font-size: 24px;
       color: #fff;
     }
     
@@ -118,7 +118,37 @@
     #tablaRegistros th, #tablaRegistros td {
       border: 1px solid #000;
       padding: 5px 10px;
-     }
+    }
+    
+    /* Responsive: dispositivos móviles */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      .nav-menu {
+        display: none;
+        flex-direction: column;
+        background: rgba(51,51,51,0.8);
+        position: absolute;
+        top: 50px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+      }
+      .nav-menu a {
+        padding: 10px 0;
+        border-top: 1px solid #fff;
+      }
+      .container {
+        margin-top: 300px;
+      }
+      .pdf-container {
+        width: 50%;
+        max-width: 100%;
+      }
+      .pdf-container iframe {
+        height: 300px;
+      }
     }
   </style>
 </head>
@@ -135,10 +165,10 @@
       </div>
       <button class="menu-toggle" id="menuToggle">☰</button>
       <nav class="nav-menu" id="navMenu">
-  <a href="index.html">Inicio</a>
-  <a href="evento en curso.html">Evento en Curso</a>
-  <a href="integrantes.html">Integrantes</a>
-</nav>
+        <a href="#">Inicio</a>
+        <a href="#">Evento en Curso</a>
+        <a href="#">Integrantes</a>
+      </nav>
     </header>
   </div>
   
@@ -146,13 +176,13 @@
   <div class="container">
     <!-- Flyer de Evento -->
     <section class="proximo-evento">
-      <h2>Próximo Evento</h2>
+      <h2>Proximo Evento</h2>
       <div class="flyer-container">
         <img src="img/flyer.png" alt="Flyer del Evento" style="width: 100%; border-radius: 15px;">
       </div>
     </section>
     
-   <!-- PDF Embed -->
+    <!-- PDF Embed -->
     <section class="pdf-embed">
       <div class="pdf-container">
         <iframe src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq"></iframe>
