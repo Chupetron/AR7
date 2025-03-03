@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados</title>
+  <style>
+    /* Estilos generales */
+    body {
+      display: flex;
+      flex-direction: column; /* Para colocar el flyer y la tabla en columna */
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #222;
+      margin: 0;
+    }
+    
+    /* Contenedor que envuelve todo el flyer y permite escalarlo en móviles */
+    .flyer-wrapper {
+      /* Por defecto, sin escala */
+      width: 528px;
+      height: 632px;
+    }
+    
+    /* Contenedor externo: fondo del flyer con efecto 3D */
+    .flyer-background {
+      position: relative;
+      width: 528px;
+      height: 632px;
+      background-image: url('podio/fondopodio5.jpg'); /* Cambia la ruta del fondo */
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px; /* Bordes redondeados */
+      overflow: hidden;
+      box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.7);
+      transform: perspective(1000px) translateY(-20px);
+    }
+    
+    /* Contenedor interno: mantiene el fondo del podio y los pilotos */
+    .flyer-container {
+      position: absolute;
+      width: 512px;
+      height: 512px;
+      background-image: url('podio/podio.png'); /* Fondo actual del podio */
+      background-size: cover;
+      background-position: center;
+      border-radius: 15px;
+      overflow: hidden;
+      top: 120px;
+      left: 8px;
+    }
+    
+    .piloto {
+      position: absolute;
+      width: 150px; /* Tamaño de las imágenes */
+    }
+    
+    .nombre {
+      position: absolute;
+      font-size: 20px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    }
+    
+    /* Posicionamiento de cada elemento dentro del contenedor interno */
+    #primer {
+      left: 50%;
+      top: 10px;
+      transform: translateX(-50%);
+    }
+    
+    #nombre-primer {
+      left: 50%;
+      top: 180px;
+      transform: translateX(-50%);
+    }
+    
+    #segundo {
+      left: 5%;
+      top: 70px;
+    }
+    
+    #nombre-segundo {
+      left: 5%;
+      top: 260px;
+    }
+    
+    #tercero {
+      right: 5%;
+      top: 125px;
+    }
+    
+    #nombre-tercero {
+      right: 5%;
+      top: 300px;
+    }
+    
+    /* RESPONSIVE DESIGN PARA SMARTPHONES:
+       Se escala todo el flyer sin alterar medidas o posiciones internas */
+    @media (max-width: 600px) {
+      .flyer-wrapper {
+        /* Escalamos el flyer manteniendo su proporción original.
+           Factor de escala = 0.75 (528px x 0.75 = 396px; 632px x 0.75 = 474px) */
+        width: calc(528px * 0.75);
+        height: calc(632px * 0.75);
+        transform: scale(0.75);
+        transform-origin: top left;
+      }
+    }
+    /* Estilos para el contenedor de la tabla publicada */
+    #tablaPublicada {
+      margin-top: 20px;
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    #tablaPublicada table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #tablaPublicada th, #tablaPublicada td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+    #tablaPublicada th {
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="flyer-wrapper">
+    <div class="flyer-background">
+      <div class="flyer-container">
+        <!-- Imagen y nombre del primer lugar -->
+        <img src="podio/piloto1.png" alt="Primer Lugar" id="primer" class="piloto">
+        <div id="nombre-primer" class="nombre">AR7 Chupete</div>
+        
+        <!-- Imagen y nombre del segundo lugar -->
+        <img src="podio/piloto2.png" alt="Segundo Lugar" id="segundo" class="piloto">
+        <div id="nombre-segundo" class="nombre">AR7 Chupete</div>
+        
+        <!-- Imagen y nombre del tercer lugar -->
+        <img src="podio/piloto3.png" alt="Tercer Lugar" id="tercero" class="piloto">
+        <div id="nombre-tercero" class="nombre">AR7 Chupete</div>
+      </div>
+    </div>
+  </div>
+  <!-- Contenedor para la tabla de Posiciones Generales publicada -->
+  <div id="tablaPublicada"></div>
+
+  <script>
+    // Al cargar la página, se obtiene la tabla publicada desde JSONbin.io
+    window.onload = function() {
+      fetch("https://api.jsonbin.io/v3/b/67bd18b0e41b4d34e49b4ebd/latest", {
+        method: "GET",
+        headers: {
+          "X-Master-Key": "$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S"
+        }
+      })
+      .then(response => response.json())
+      .then(json => {
+        if (json && json.record && json.record.tablaPosicionesGenerales) {
+          document.getElementById('tablaPublicada').innerHTML = json.record.tablaPosicionesGenerales;
+        }
+      })
+      .catch(err => {
+        console.error("Error al obtener la tabla publicada:", err);
+      });
+    }
+  </script>
+</body>
+</html>
