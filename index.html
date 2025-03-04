@@ -78,11 +78,11 @@
       z-index: 1;
     }
     .flyer-container {
-      width: 400px;
+      width: 300px;
       margin: 0 auto;
-      border-radius: 15px;
+      border-radius: 20px;
       border: 2px solid #ccc;
-      padding: 5px;
+      padding: 10px;
       background: rgba(255,255,255,0.9);
       box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
     }
@@ -115,10 +115,10 @@
     /* Responsive: dispositivos móviles */
     @media (max-width: 768px) {
       .menu-toggle {
-        display: block;
-        position: relative;
-        left: -30px; /* Ajusta este valor según lo necesites */
-      }
+  display: block;
+  position: relative;
+  left: -30px; /* Ajusta este valor según lo necesites */
+}
       .nav-menu {
         display: none;
         flex-direction: column;
@@ -167,19 +167,20 @@
   <div class="container">
     <!-- Flyer de Evento -->
     <section class="proximo-evento">
-      <h2>Próximo Evento</h2>
-      <div class="flyer-container">
-        <video autoplay muted loop style="width: 100%; border-radius: 15px; object-fit: cover;">
-          <source src="vid/radicalflyer.mp4" type="video/mp4">
-          Tu navegador no soporta la reproducción de video.
-        </video>
-      </div>
-    </section>
-
+  <h2>Proximo Evento</h2>
+  <div class="flyer-container">
+    <video autoplay muted loop playsinline style="width: 100%; border-radius: 15px;">
+      <source src="vid/radicalflyer.mp4" type="video/mp4">
+      Tu navegador no soporta video HTML5.
+    </video>
+  </div>
+</section>
+    
     <!-- PDF Embed insertado -->
     <section class="pdf-embed">
       <iframe class="scribd_iframe_embed" title="Radical Cup" src="https://www.scribd.com/embeds/832763027/content?start_page=1&view_mode=scroll&access_key=key-jSY96TkL8LsCDLjO7aIq&scribd_rebrand=true" tabindex="0" data-auto-height="true" data-aspect-ratio="0.7080062794348508" scrolling="no" width="100%" height="600" frameborder="0"></iframe>
       <p style="margin: 12px auto 6px auto; font-family: Helvetica,Arial,Sans-serif; font-size: 14px; line-height: normal; display: block;">
+       
       </p>
     </section>
     
