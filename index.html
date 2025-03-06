@@ -141,6 +141,22 @@
         max-width: 100%;
       }
     }
+	 /* Estilo para el efecto fullscreen */
+  .video-container {
+    transition: all 2s ease-in-out;
+  }
+  /* Estilo para que el contenedor ocupe la pantalla completa */
+  .video-container.fullscreen {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+  }
+  .video-container.fullscreen video {
+    transition: opacity 2s ease-in-out;
+  }
   </style>
 </head>
 <body>
@@ -335,6 +351,22 @@
     window.onload = function(){
       cargarTabla();
     };
+	document.addEventListener('DOMContentLoaded', function() {
+    var videoContainer = document.querySelector('.video-container');
+    if (videoContainer) {
+      videoContainer.classList.add('fullscreen');
+    }
+  });
+
+  // Luego, una vez cargada la página, se remueve la clase "fullscreen" para que el contenedor transicione a su estado original
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var videoContainer = document.querySelector('.video-container');
+      if (videoContainer) {
+        videoContainer.classList.remove('fullscreen');
+      }
+    }, 2000); // Tiempo de retardo en milisegundos (ajusta a tu preferencia)
+  });
   </script>
 </body>
 </html>
