@@ -42,8 +42,8 @@
 
     <p><strong>2. K dinámico según experiencia</strong><br>
     El K controla cuánto cambia el Elo:<br>
-    • <em>Menos de 5 carreras:</em> K = 40 (alta variación)<br>
-    • <em>5 o más carreras:</em> K = 20 (más estable)</p>
+    • <em>Menos de 3 carreras:</em> K = 20<br>
+    • <em>3 o más carreras:</em> K = 15</p>
 
     <p><strong>3. Cómo se calcula el Elo</strong><br>
     Se compara cada piloto contra todos en la carrera. Ganar a uno con mayor Elo suma más puntos. Perder contra uno con menos, resta más.</p>
@@ -64,6 +64,18 @@
     <strong>Δ Elo:</strong> Cambio desde la última carrera<br>
     <strong>Carreras:</strong> Número de participaciones<br>
     <strong>Victorias:</strong> Finalizó 1º en esa cantidad de carreras</p>
+
+| Elemento                 | Valor recomendado                                   |
+| ------------------------ | --------------------------------------------------- |
+| Elo inicial              | 750                                                 |
+| Elo mínimo               | 1                                                   |
+| Elo máximo               | 1500                                                |
+| K inicial                | 20                                                  |
+| K luego de 3+ carreras   | 15                                                  |
+| Mínimo de pilotos        | 7                                                   |
+| Ajuste por pocos pilotos | K reducido si son menos de 7                        |
+
+  
   </details>
 
 <script>
