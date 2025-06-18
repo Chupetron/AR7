@@ -259,11 +259,17 @@ function updateTable() {
 
   table.innerHTML = '';
   list.forEach(([name, data], index) => {
+    const posChange = data.posChange ?? 0;
+    const sign = posChange > 0 ? '+' : (posChange < 0 ? '' : '');
+    let color = '#b0bec5'; // gris claro por defecto
+    if (posChange > 0) color = 'limegreen';
+    else if (posChange < 0) color = 'tomato';
+
     const row = `<tr>
       <td>${index + 1}</td>
       <td>${name}</td>
       <td>${data.elo}</td>
-      <td>${data.posChange ?? 0}</td>
+      <td style="color: ${color}; font-weight: bold;">${sign}${posChange}</td>
       <td>${data.races}</td>
       <td>${data.wins}</td>
     </tr>`;
