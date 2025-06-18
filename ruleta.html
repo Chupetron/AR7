@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ruleta Forza Motorsport</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: #1e1e1e;
+            padding: 25px 40px;
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 0 15px #00aaff88;
+        }
+        h1 {
+            text-align: center;
+            color: #00d8ff;
+            margin-bottom: 25px;
+            letter-spacing: 1.2px;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        /* Checkbox group styling */
+        .checkbox-group {
+            flex: 1 1 45%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-group label {
+            cursor: pointer;
+            font-weight: 600;
+            color: #00d8ff;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #00d8ff;
+        }
+        /* División select styling */
+        .division-group {
+            flex-basis: 100%;
+            margin-top: 10px;
+        }
+        label[for="division"] {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #00d8ff;
+        }
+        select#division {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: none;
+            background: #282828;
+            color: #eee;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: inset 0 0 8px #0077bbaa;
+            transition: background 0.3s ease;
+        }
+        select#division:hover, select#division:focus {
+            background: #333;
+            outline: none;
+        }
+        /* Buttons styling */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+        button {
+            background: #00aaff;
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 0 12px #00aaffaa;
+            transition: background 0.25s ease;
+        }
+        button:hover {
+            background: #0088cc;
+        }
+        /* Result display */
+        .result {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        #vehicleResult, #trackResult {
+            background: #282828;
+            border-radius: 12px;
+            padding: 15px;
+            width: 48%;
+            text-align: center;
+        }
+        #vehicleResult h2, #trackResult h2 {
+            color: #00d8ff;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        #vehicleName, #trackName {
+            font-weight: 600;
+            color: #ccc;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ruleta Forza Motorsport</h1>
+        <div class="filters">
+            <div class="checkbox-group">
+                <input type="checkbox" id="dlc" />
+                <label for="dlc">DLC</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="reward" />
+                <label for="reward">Reward</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="showroom" />
+                <label for="showroom">Showroom All</label>
+            </div>
+            <div class="division-group">
+                <label for="division">División</label>
+                <select id="division">
+                    <option value="Todos">Todos</option>
+                    <option value="Early Sport Compact">Early Sport Compact</option>
+                    <option value="Hot Hatch Icons">Hot Hatch Icons</option>
+                    <option value="Sport GT Icons">Sport GT Icons</option>
+                    <option value="Modern Sport GT">Modern Sport GT</option>
+                    <option value="Modern Hypercars">Modern Hypercars</option>
+                    <option value="Modern Sport Touring">Modern Sport Touring</option>
+                    <option value="Forza Proto-H">Forza Proto-H</option>
+                    <option value="Forza GT3">Forza GT3</option>
+                    <option value="Exotic GT Classics">Exotic GT Classics</option>
+                    <option value="Vintage Le Mans Sportscars">Vintage Le Mans Sportscars</option>
+                    <option value="GTP/C">GTP/C</option>
+                    <option value="488 Challenge Spec">488 Challenge Spec</option>
+                    <option value="Early Factory Racecars">Early Factory Racecars</option>
+                    <option value="Early LMP">Early LMP</option>
+                    <option value="Formula 60s">Formula 60s</option>
+                    <option value="Formula 70s">Formula 70s</option>
+                    <option value="Formula Drift">Formula Drift</option>
+                    <option value="Formula Mazda Spec">Formula Mazda Spec</option>
+                    <option value="Forza AUS">Forza AUS</option>
+                    <option value="Forza GT2">Forza GT2</option>
+                    <option value="Forza GT4">Forza GT4</option>
+                    <option value="Forza P1">Forza P1</option>
+                    <option value="Forza P2">Forza P2</option>
+                    <option value="Forza P3">Forza P3</option>
+                    <option value="Forza Specials">Forza Specials</option>
+                    <option value="Forza T/A">Forza T/A</option>
+                    <option value="Forza Touring Cars">Forza Touring Cars</option>
+                    <option value="G40 Junior Spec">G40 Junior Spec</option>
+                    <option value="Grand Prix Rivals">Grand Prix Rivals</option>
+                    <option value="GTX Sportscars">GTX Sportscars</option>
+                    <option value="Mission R Spec">Mission R Spec</option>
+                    <option value="Modern Factory Racecars">Modern Factory Racecars</option>
+                    <option value="Modern Hot Hatch">Modern Hot Hatch</option>
+                    <option value="Modern Sport Compact">Modern Sport Compact</option>
+                    <option value="Modern Sport Coupe">Modern Sport Coupe</option>
+                    <option value="Modern Muscle">Modern Muscle</option>
+                    <option value="Modern FWD Hot Hatch">Modern FWD Hot Hatch</option>
+                    <option value="Modern Grand Prix">Modern Grand Prix</option>
+                    <option value="Modern Grand Touring">Modern Grand Touring</option>
+                    <option value="Modern Indy">Modern Indy</option>
+                    <option value="NASCAR">NASCAR</option>
+                    <option value="Prototype Group Racing">Prototype Group Racing</option>
+                    <option value="Sport Coupe Icons">Sport Coupe Icons</option>
+                    <option value="Sport Luxury">Sport Luxury</option>
+                    <option value="Sport Touring Classics">Sport Touring Classics</option>
+                    <option value="Street Drag Racers">Street Drag Racers</option>
+                    <option value="Super Trofeo">Super Trofeo</option>
+                    <option value="The Birth of Grand Prix">The Birth of Grand Prix</option>
+                    <option value="Track Toys">Track Toys</option>
+                    <option value="Vintage Exotic GT">Vintage Exotic GT</option>
+                    <option value="Vintage Le Mans Prototypes">Vintage Le Mans Prototypes</option>
+                    <option value="Vintage Muscle">Vintage Muscle</option>
+                    <option value="Vintage Sport Compact">Vintage Sport Compact</option>
+                    <option value="Vintage Trans Am">Vintage Trans Am</option>
+                </select>
+            </div>
+        </div>
+        <div class="buttons">
+            <button id="vehicleBtn">Generar Vehículo</button>
+            <button id="trackBtn">Generar Pista</button>
+        </div>
+        <div class="result">
+            <div id="vehicleResult">
+                <h2>Vehículo</h2>
+                <p id="vehicleName"></p>
+            </div>
+            <div id="trackResult">
+                <h2>Pista</h2>
+                <p id="trackName"></p>
+            </div>
+        </div>
+    </div>
+    <script src="ruleta.js"></script>
+</body>
+</html>
