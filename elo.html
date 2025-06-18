@@ -5,19 +5,170 @@
   <meta charset="UTF-8" />
   <title>Tabla de Ranking</title>
   <style>
-    body { font-family: sans-serif; padding: 2rem; background: #212121; }
-    table { border-collapse: collapse; width: 100%; margin-top: 1rem; background: #fff; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
-    details { background: #fff; padding: 1rem; margin-top: 2rem; border: 1px solid #ccc; }
-    #filterContainer { margin: 1rem 0; }
+ 
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 2rem;
+      background: #121212;
+      color: #e0e0e0;
+      margin: 0;
+    }
+
+    h1 {
+      color: #90caf9; /* azul suave */
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    /* Contenedor filtro */
+    #filterContainer {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    label {
+      font-weight: 600;
+      color: #bbdefb;
+      margin-right: 0.5rem;
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 0.3rem;
+      border-radius: 4px;
+      border: 1px solid #37474f;
+      background: #263238;
+      color: #e0e0e0;
+      transition: border-color 0.3s;
+    }
+    input[type="number"]:focus {
+      border-color: #90caf9;
+      outline: none;
+      background: #37474f;
+    }
+
+    button {
+      background-color: #90caf9;
+      border: none;
+      color: #121212;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      margin-left: 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #64b5f6;
+    }
+
+    /* Tabla */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1rem;
+      background: #263238; /* gris oscuro azulado */
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    thead {
+      background: #455a64; /* tono medio */
+    }
+    th, td {
+      border: 1px solid #37474f;
+      padding: 0.6rem;
+      text-align: center;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+    }
+    tbody tr:nth-child(odd) {
+      background: #37474f; /* rayado sutil */
+    }
+    tbody tr:hover {
+      background: #90caf9;
+      color: #121212;
+      font-weight: 600;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    /* Detalles */
+    details {
+      background: #263238;
+      padding: 1rem 1.5rem;
+      margin-top: 2rem;
+      border: 1px solid #455a64;
+      border-radius: 8px;
+      color: #cfd8dc;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    summary {
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #90caf9;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Lista dentro de detalles */
+    details ul {
+      list-style: inside disc;
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+      color: #b0bec5;
+    }
+    details ul li strong {
+      color: #e3f2fd;
+    }
+
+    /* Enlaces y puntos importantes */
+    strong {
+      color: #90caf9;
+    }
+
+    /* Responsive: que no quede demasiado pequeño */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      th, td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+      }
+      th::before, td::before {
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 0.5rem;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 700;
+        color: #90caf9;
+      }
+      tr {
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #90caf9;
+      }
+      th:nth-of-type(1)::before { content: "Pos."; }
+      th:nth-of-type(2)::before { content: "Piloto"; }
+      th:nth-of-type(3)::before { content: "Elo"; }
+      th:nth-of-type(4)::before { content: "Δ Elo"; }
+      th:nth-of-type(5)::before { content: "Carreras"; }
+      th:nth-of-type(6)::before { content: "Victorias"; }
+    }
   </style>
 </head>
 <body>
-  <h1>Tabla de Posiciones Elo</h1>
+  <h1>Ranking</h1>
 
   <div id="filterContainer">
     <label for="minRaces">Filtrar por mínimo de carreras: </label>
-    <input type="number" id="minRaces" value="0" min="0" style="width: 60px" />
+    <input type="number" id="minRaces" value="0" min="0" />
     <button onclick="updateTable()">Aplicar filtro</button>
   </div>
 
@@ -74,13 +225,13 @@
     <strong>Mínimo de pilotos:</strong> 7<br>
     <strong>Ajuste por pocos pilotos:</strong> K reducido si son menos de 7</p>
 
-Mínimo de 7 pilotos.<br>
-Penalización suave: si hay menos de 7 pilotos, el impacto del Elo se reduce a la mitad.<br>
-K ajustado: 20 para novatos (<3 carreras) y 15 para los demás.<br>
-Ponderación por posición final y comparación relativa.<br>
-Degradación por inactividad: si un piloto no corre por 3 o más carreras, pierde 5 puntos.<br>
-Factor por cantidad de oponentes.<br>
-</details>
+    Mínimo de 7 pilotos.<br>
+    Penalización suave: si hay menos de 7 pilotos, el impacto del Elo se reduce a la mitad.<br>
+    K ajustado: 20 para novatos (<3 carreras) y 15 para los demás.<br>
+    Ponderación por posición final y comparación relativa.<br>
+    Degradación por inactividad: si un piloto no corre por 3 o más carreras, pierde 5 puntos.<br>
+    Factor por cantidad de oponentes.<br>
+  </details>
 
 <script>
 const API_KEY = '$2a$10$NFg9Tn0YALVhEHU8PnYm1OY5kOyRV7UMMMrpaYMuFapTiAmn0uPj2';
