@@ -1,0 +1,110 @@
+<!-- archivo: ranking.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tabla de Ranking</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; background: #f0f0f0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; background: #fff; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: center; }
+    details { background: #fff; padding: 1rem; margin-top: 2rem; border: 1px solid #ccc; }
+    #filterContainer { margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h1>Tabla de Posiciones Elo</h1>
+
+  <div id="filterContainer">
+    <label for="minRaces">Filtrar por mínimo de carreras: </label>
+    <input type="number" id="minRaces" value="0" min="0" style="width: 60px" />
+    <button onclick="updateTable()">Aplicar filtro</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Pos.</th>
+        <th>Piloto</th>
+        <th>Elo</th>
+        <th>Δ Elo</th>
+        <th>Carreras</th>
+        <th>Victorias</th>
+      </tr>
+    </thead>
+    <tbody id="rankingTable"></tbody>
+  </table>
+
+  <details open>
+    <summary><strong>¿Cómo funciona este ranking?</strong></summary>
+    <p><strong>1. Elo inicial, mínimo y máximo</strong><br>
+    Todos comienzan con <strong>Elo 750</strong>. No baja de <strong>1</strong>, ni sube de <strong>1500</strong>.</p>
+
+    <p><strong>2. K dinámico según experiencia</strong><br>
+    El K controla cuánto cambia el Elo:<br>
+    • <em>Menos de 5 carreras:</em> K = 40 (alta variación)<br>
+    • <em>5 o más carreras:</em> K = 20 (más estable)</p>
+
+    <p><strong>3. Cómo se calcula el Elo</strong><br>
+    Se compara cada piloto contra todos en la carrera. Ganar a uno con mayor Elo suma más puntos. Perder contra uno con menos, resta más.</p>
+
+    <p><strong>4. Niveles de habilidad sugeridos</strong></p>
+    <ul>
+      <li><strong>1001–1500:</strong> ⭐⭐⭐⭐⭐ Elite</li>
+      <li><strong>751–1000:</strong> ⭐⭐⭐⭐ Pro</li>
+      <li><strong>501–750:</strong> ⭐⭐⭐ Competente</li>
+      <li><strong>251–500:</strong> ⭐⭐ Promesa</li>
+      <li><strong>1–250:</strong> ⭐ En desarrollo</li>
+    </ul>
+
+    <p><strong>5. Columna por columna:</strong><br>
+    <strong>Pos.:</strong> Orden por Elo<br>
+    <strong>Piloto:</strong> Nombre del corredor<br>
+    <strong>Elo:</strong> Puntaje actual (1–1500)<br>
+    <strong>Δ Elo:</strong> Cambio desde la última carrera<br>
+    <strong>Carreras:</strong> Número de participaciones<br>
+    <strong>Victorias:</strong> Finalizó 1º en esa cantidad de carreras</p>
+  </details>
+
+<script>
+const API_KEY = '$2a$10$NFg9Tn0YALVhEHU8PnYm1OY5kOyRV7UMMMrpaYMuFapTiAmn0uPj2';
+const BIN_ID = '6852ca538561e97a50269a41';
+const HEADERS = {
+  'Content-Type': 'application/json',
+  'X-Master-Key': API_KEY
+};
+let drivers = {};
+let lastEloDelta = {};
+
+async function loadData() {
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: HEADERS });
+  const json = await res.json();
+  drivers = json.record.drivers || {};
+  updateTable();
+}
+
+function updateTable() {
+  const minRaces = parseInt(document.getElementById("minRaces").value) || 0;
+  const table = document.getElementById("rankingTable");
+  const list = Object.entries(drivers)
+    .filter(([_, data]) => data.races >= minRaces)
+    .sort((a, b) => b[1].elo - a[1].elo);
+
+  table.innerHTML = '';
+  list.forEach(([name, data], index) => {
+    const row = `<tr>
+      <td>${index + 1}</td>
+      <td>${name}</td>
+      <td>${data.elo}</td>
+      <td>${data.delta ?? 0}</td>
+      <td>${data.races}</td>
+      <td>${data.wins}</td>
+    </tr>`;
+    table.innerHTML += row;
+  });
+}
+
+loadData();
+</script>
+</body>
+</html>
