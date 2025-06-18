@@ -178,7 +178,7 @@
         <th>Pos.</th>
         <th>Piloto</th>
         <th>Elo</th>
-        <th>Δ Elo</th>
+        <th>+/-</th>
         <th>Carreras</th>
         <th>Victorias</th>
       </tr>
@@ -263,7 +263,7 @@ function updateTable() {
       <td>${index + 1}</td>
       <td>${name}</td>
       <td>${data.elo}</td>
-      <td>${data.delta ?? 0}</td>
+      <td>${data.posChange ?? 0}</td>
       <td>${data.races}</td>
       <td>${data.wins}</td>
     </tr>`;
