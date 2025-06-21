@@ -1,11 +1,9 @@
-<!-- archivo: ranking.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <title>Tabla de Ranking</title>
   <style>
- 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 2rem;
@@ -13,67 +11,72 @@
       color: #e0e0e0;
       margin: 0;
     }
-
     h1 {
-      color: #90caf9; /* azul suave */
+      color: #90caf9;
       text-align: center;
       margin-bottom: 1rem;
     }
-
-    /* Contenedor filtro */
     #filterContainer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
       margin: 1rem 0;
-      text-align: center;
     }
-
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     label {
       font-weight: 600;
       color: #bbdefb;
-      margin-right: 0.5rem;
     }
-
-    input[type="number"] {
-      width: 60px;
-      padding: 0.3rem;
+    input[type="number"], select {
+      width: 120px;
+      padding: 0.4rem;
       border-radius: 4px;
       border: 1px solid #37474f;
       background: #263238;
       color: #e0e0e0;
-      transition: border-color 0.3s;
+      font-size: 0.9rem;
     }
-    input[type="number"]:focus {
+    input[type="number"]:focus, select:focus {
       border-color: #90caf9;
       outline: none;
       background: #37474f;
     }
-
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1rem;
+    }
     button {
-      background-color: #90caf9;
+      padding: 0.4rem 0.8rem;
+      background: #90caf9;
       border: none;
       color: #121212;
       font-weight: 600;
-      padding: 0.5rem 1rem;
-      margin-left: 0.5rem;
       border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      font-size: 0.9rem;
     }
     button:hover {
-      background-color: #64b5f6;
+      background: #64b5f6;
     }
-
-    /* Tabla */
     table {
       border-collapse: collapse;
       width: 100%;
       margin-top: 1rem;
-      background: #263238; /* gris oscuro azulado */
+      background: #263238;
       box-shadow: 0 0 10px rgba(0,0,0,0.5);
       border-radius: 8px;
       overflow: hidden;
     }
     thead {
-      background: #455a64; /* tono medio */
+      background: #455a64;
     }
     th, td {
       border: 1px solid #37474f;
@@ -83,7 +86,7 @@
       font-size: 0.95rem;
     }
     tbody tr:nth-child(odd) {
-      background: #37474f; /* rayado sutil */
+      background: #37474f;
     }
     tbody tr:hover {
       background: #90caf9;
@@ -91,8 +94,6 @@
       font-weight: 600;
       transition: background-color 0.3s, color 0.3s;
     }
-
-    /* Detalles */
     details {
       background: #263238;
       padding: 1rem 1.5rem;
@@ -113,8 +114,6 @@
       color: #90caf9;
       margin-bottom: 0.5rem;
     }
-
-    /* Lista dentro de detalles */
     details ul {
       list-style: inside disc;
       margin-left: 1rem;
@@ -124,13 +123,9 @@
     details ul li strong {
       color: #e3f2fd;
     }
-
-    /* Enlaces y puntos importantes */
     strong {
       color: #90caf9;
     }
-
-    /* Responsive: que no quede demasiado pequeño */
     @media (max-width: 600px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -158,8 +153,13 @@
       th:nth-of-type(2)::before { content: "Piloto"; }
       th:nth-of-type(3)::before { content: "Elo"; }
       th:nth-of-type(4)::before { content: "Δ Elo"; }
-      th:nth-of-type(5)::before { content: "Carreras"; }
-      th:nth-of-type(6)::before { content: "Victorias"; }
+      th:nth-of-type(5)::before { content: "Δ Pos"; }
+      th:nth-of-type(6)::before { content: "Carreras"; }
+      th:nth-of-type(7)::before { content: "Victorias"; }
+      .filter-group {
+        flex: 1 1 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -167,9 +167,18 @@
   <h1>Ranking</h1>
 
   <div id="filterContainer">
-    <label for="minRaces">Filtrar por mínimo de carreras: </label>
-    <input type="number" id="minRaces" value="0" min="0" />
-    <button onclick="updateTable()">Aplicar filtro</button>
+    <div class="filter-group">
+      <label for="minRaces">Mínimo de carreras:</label>
+      <input type="number" id="minRaces" value="0" min="0" />
+      <button onclick="applyMinRacesFilter()">Aplicar</button>
+    </div>
+    <div class="filter-group">
+      <label for="organizerFilter">Organizador:</label>
+      <select id="organizerFilter">
+        <option value="">Todos los organizadores</option>
+      </select>
+      <button onclick="applyOrganizerFilter()">Aplicar</button>
+    </div>
   </div>
 
   <table>
@@ -178,7 +187,8 @@
         <th>Pos.</th>
         <th>Piloto</th>
         <th>Elo</th>
-        <th>+/-</th>
+        <th>Δ Elo</th>
+        <th>Δ Pos</th>
         <th>Carreras</th>
         <th>Victorias</th>
       </tr>
@@ -193,8 +203,9 @@
 
     <p><strong>2. K dinámico según experiencia</strong><br>
     El K controla cuánto cambia el Elo:<br>
-    • <em>Menos de 3 carreras:</em> K = 20<br>
-    • <em>3 o más carreras:</em> K = 15</p>
+    • <em>Menos de 3 carreras:</em> K = 20 (pilotos novatos, marcados con 🌟)<br>
+    • <em>3 o más carreras:</em> K = 15<br>
+    • <em>Menos de 7 pilotos:</em> K reducido a la mitad</p>
 
     <p><strong>3. Cómo se calcula el Elo</strong><br>
     Se compara cada piloto contra todos en la carrera. Ganar a uno con mayor Elo suma más puntos. Perder contra uno con menos, resta más.</p>
@@ -210,27 +221,23 @@
 
     <p><strong>5. Columna por columna:</strong><br>
     <strong>Pos.:</strong> Orden por Elo<br>
-    <strong>Piloto:</strong> Nombre del corredor<br>
+    <strong>Piloto:</strong> Nombre del corredor (🌟 indica novato: menos de 3 carreras)<br>
     <strong>Elo:</strong> Puntaje actual (1–1500)<br>
-    <strong>Δ Elo:</strong> Cambio desde la última carrera<br>
-    <strong>Carreras:</strong> Número de participaciones<br>
-    <strong>Victorias:</strong> Finalizó 1º en esa cantidad de carreras</p>
+    <strong>Δ Elo:</strong> Cambio de Elo desde la última carrera<br>
+    <strong>Δ Pos:</strong> Cambio de posición desde el ranking anterior<br>
+    <strong>Carreras:</strong> Número de participaciones (filtrado por organizador si se especifica; solo pilotos con 1+ carreras si se filtra por organizador)<br>
+    <strong>Victorias:</strong> Finalizó 1º en esa cantidad de carreras (filtrado por organizador si se especifica)</p>
 
-    <p><strong>6.:</strong><br>
+    <p><strong>6. Reglas adicionales:</strong><br>
     <strong>Elo inicial:</strong> 750<br>
     <strong>Elo mínimo:</strong> 1<br>
     <strong>Elo máximo:</strong> 1500<br>
     <strong>K inicial:</strong> 20<br>
     <strong>K luego de 3+ carreras:</strong> 15<br>
     <strong>Mínimo de pilotos:</strong> 7<br>
-    <strong>Ajuste por pocos pilotos:</strong> K reducido si son menos de 7</p>
-
-    Mínimo de 7 pilotos.<br>
-    Penalización suave: si hay menos de 7 pilotos, el impacto del Elo se reduce a la mitad.<br>
-    K ajustado: 20 para novatos (<3 carreras) y 15 para los demás.<br>
-    Ponderación por posición final y comparación relativa.<br>
-    Degradación por inactividad: si un piloto no corre por 3 o más carreras, pierde 5 puntos.<br>
-    Factor por cantidad de oponentes.<br>
+    <strong>Ajuste por pocos pilotos:</strong> K reducido a la mitad si son menos de 7<br>
+    <strong>Penalización por inactividad:</strong> Pérdida de 5 puntos de Elo si no participa en 3 o más carreras consecutivas<br>
+    <strong>Filtros:</strong> Usa el filtro de mínimo de carreras y la lista desplegable de organizadores para personalizar la tabla. Cada filtro se aplica por separado. Al filtrar por organizador, solo se muestran pilotos con al menos 1 carrera en esas condiciones.</p>
   </details>
 
 <script>
@@ -241,40 +248,109 @@ const HEADERS = {
   'X-Master-Key': API_KEY
 };
 let drivers = {};
-let lastEloDelta = {};
+let races = [];
+let currentMinRaces = 0;
+let currentOrganizerFilter = '';
 
 async function loadData() {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: HEADERS });
-  const json = await res.json();
-  drivers = json.record.drivers || {};
-  updateTable();
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, { headers: HEADERS });
+    const json = await res.json();
+    drivers = json.record.drivers || {};
+    races = json.record.races || [];
+    Object.keys(drivers).forEach(name => {
+      if (drivers[name].isNovice === undefined) {
+        drivers[name].isNovice = drivers[name].races < 3;
+      }
+    });
+    populateOrganizerFilter();
+    updateTable();
+  } catch (error) {
+    console.error('Error al cargar los datos:', error);
+  }
+}
+
+function populateOrganizerFilter() {
+  const organizerSelect = document.getElementById('organizerFilter');
+  const organizers = [...new Set(races.map(race => race.organizer))].sort();
+  organizerSelect.innerHTML = '<option value="">Todos los organizadores</option>';
+  organizers.forEach(organizer => {
+    const option = document.createElement('option');
+    option.value = organizer;
+    option.textContent = organizer;
+    organizerSelect.appendChild(option);
+  });
 }
 
 function updateTable() {
-  const minRaces = parseInt(document.getElementById("minRaces").value) || 0;
-  const table = document.getElementById("rankingTable");
-  const list = Object.entries(drivers)
-    .filter(([_, data]) => data.races >= minRaces)
+  const filteredRaces = currentOrganizerFilter ? races.filter(race => race.organizer.toLowerCase() === currentOrganizerFilter.toLowerCase()) : races;
+
+  const stats = {};
+  Object.keys(drivers).forEach(name => {
+    stats[name] = {
+      elo: drivers[name].elo,
+      deltaElo: drivers[name].deltaElo || 0,
+      deltaPos: drivers[name].deltaPos || 0,
+      races: 0,
+      wins: 0,
+      isNovice: drivers[name].isNovice
+    };
+  });
+
+  filteredRaces.forEach(race => {
+    race.results.forEach((name, index) => {
+      if (stats[name]) {
+        stats[name].races++;
+        if (index === 0) stats[name].wins++;
+      }
+    });
+  });
+
+  const currentRanking = Object.entries(stats)
+    .filter(([_, data]) => {
+      if (currentOrganizerFilter) {
+        return data.races >= 1;
+      }
+      return data.races >= currentMinRaces;
+    })
     .sort((a, b) => b[1].elo - a[1].elo);
 
+  const table = document.getElementById("rankingTable");
   table.innerHTML = '';
-  list.forEach(([name, data], index) => {
-    const posChange = data.posChange ?? 0;
-    const sign = posChange > 0 ? '+' : (posChange < 0 ? '' : '');
-    let color = '#b0bec5'; // gris claro por defecto
-    if (posChange > 0) color = 'limegreen';
-    else if (posChange < 0) color = 'tomato';
+  currentRanking.forEach(([name, data], index) => {
+    const deltaElo = data.deltaElo;
+    const deltaPos = data.deltaPos;
+    const eloSign = deltaElo > 0 ? '+' : (deltaElo < 0 ? '' : '');
+    const posSign = deltaPos > 0 ? '+' : (deltaPos < 0 ? '' : '');
+    let eloColor = '#b0bec5';
+    let posColor = '#b0bec5';
+    if (deltaElo > 0) eloColor = 'limegreen';
+    else if (deltaElo < 0) eloColor = 'tomato';
+    if (deltaPos > 0) posColor = 'limegreen';
+    else if (deltaPos < 0) posColor = 'tomato';
+    const noviceMark = data.isNovice ? '🌟' : '';
 
     const row = `<tr>
       <td>${index + 1}</td>
-      <td>${name}</td>
+      <td>${name}${noviceMark}</td>
       <td>${data.elo}</td>
-      <td style="color: ${color}; font-weight: bold;">${sign}${posChange}</td>
+      <td style="color: ${eloColor}; font-weight: bold;">${eloSign}${deltaElo}</td>
+      <td style="color: ${posColor}; font-weight: bold;">${posSign}${deltaPos}</td>
       <td>${data.races}</td>
       <td>${data.wins}</td>
     </tr>`;
     table.innerHTML += row;
   });
+}
+
+function applyMinRacesFilter() {
+  currentMinRaces = parseInt(document.getElementById("minRaces").value) || 0;
+  updateTable();
+}
+
+function applyOrganizerFilter() {
+  currentOrganizerFilter = document.getElementById("organizerFilter").value;
+  updateTable();
 }
 
 loadData();
