@@ -6,55 +6,43 @@
   <title>Evento en Curso</title>
   <style>
     @font-face {
-  font-family: 'NoizeSport';
-  src: url('fonts/noize_sport.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Aplicar la fuente a todo el documento */
-body {
-  font-family: 'NoizeSport', sans-serif;
-}
-
-	/* Estilos generales */
+      font-family: 'NoizeSport';
+      src: url('fonts/noize_sport.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
     body {
+      font-family: 'NoizeSport', sans-serif;
       display: flex;
-      flex-direction: column; /* Para colocar el flyer y la tabla en columna */
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       background-color: #222;
       margin: 0;
+      color: #fff;
     }
-    
-    /* Contenedor que envuelve todo el flyer y permite escalarlo en móviles */
     .flyer-wrapper {
-      /* Por defecto, sin escala */
       width: 528px;
       height: 632px;
     }
-    
-    /* Contenedor externo: fondo del flyer con efecto 3D */
     .flyer-background {
       position: relative;
       width: 528px;
       height: 632px;
-      background-image: url('podio/laguna.jpg'); /* Cambia la ruta del fondo */
+      background-image: url('podio/laguna.jpg');
       background-size: cover;
       background-position: center;
-      border-radius: 20px; /* Bordes redondeados */
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.7);
       transform: perspective(1000px) translateY(-20px);
     }
-    
-    /* Contenedor interno: mantiene el fondo del podio y los pilotos */
     .flyer-container {
       position: absolute;
       width: 512px;
       height: 512px;
-      background-image: url('podio/podio.png'); /* Fondo actual del podio */
+      background-image: url('podio/podio.png');
       background-size: cover;
       background-position: center;
       border-radius: 15px;
@@ -62,65 +50,50 @@ body {
       top: 120px;
       left: 8px;
     }
-    
     .piloto {
       position: absolute;
-      width: 150px; /* Tamaño de las imágenes */
+      width: 150px;
     }
-    
     .nombre {
       position: absolute;
       font-size: 20px;
       color: #fff;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
     }
-    
-    /* Posicionamiento de cada elemento dentro del contenedor interno */
     #primer {
       left: 50%;
       top: 10px;
       transform: translateX(-50%);
     }
-    
     #nombre-primer {
       left: 50%;
       top: 180px;
       transform: translateX(-50%);
     }
-    
     #segundo {
       left: 5%;
       top: 70px;
     }
-    
     #nombre-segundo {
       left: 5%;
       top: 260px;
     }
-    
     #tercero {
       right: 5%;
       top: 125px;
     }
-    
     #nombre-tercero {
       right: 5%;
       top: 300px;
     }
-    
-    /* RESPONSIVE DESIGN PARA SMARTPHONES:
-       Se escala todo el flyer sin alterar medidas o posiciones internas */
     @media (max-width: 600px) {
       .flyer-wrapper {
-        /* Escalamos el flyer manteniendo su proporción original.
-           Factor de escala = 0.75 (528px x 0.75 = 396px; 632px x 0.75 = 474px) */
         width: calc(528px * 0.75);
         height: calc(632px * 0.75);
         transform: scale(0.75);
         transform-origin: top left;
       }
     }
-    /* Estilos para el contenedor de la tabla publicada */
     #tablaPublicada {
       margin-top: 20px;
       width: 90%;
@@ -142,56 +115,195 @@ body {
       background-color: #333;
       color: #fff;
     }
+    #tablaPublicada td {
+      color: #000;
+    }
+    #championshipContainer {
+      margin: 10px 0;
+      text-align: center;
+    }
+    select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #333;
+      color: #fff;
+      font-family: 'NoizeSport', sans-serif;
+    }
+    select option {
+      background-color: #333;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
-  <!-- Título para el flyer -->
-  <h2 style="color: white; text-align: center; margin-bottom: 30px;">Resultados de la Ultima Carrera</h2>
+  <h2 style="color: white; text-align: center; margin-bottom: 30px;">Resultados de la Última Carrera</h2>
 
   <div class="flyer-wrapper">
     <div class="flyer-background">
       <div class="flyer-container">
-        <!-- Imagen y nombre del primer lugar -->
         <img src="podio/piloto1.png" alt="Primer Lugar" id="primer" class="piloto">
-        <div id="nombre-primer" class="nombre">AR7 Chupete</div>
-        
-        <!-- Imagen y nombre del segundo lugar -->
+        <div id="nombre-primer" class="nombre">Sin datos</div>
         <img src="podio/piloto2.png" alt="Segundo Lugar" id="segundo" class="piloto">
-        <div id="nombre-segundo" class="nombre">AR7 Chupete</div>
-        
-        <!-- Imagen y nombre del tercer lugar -->
+        <div id="nombre-segundo" class="nombre">Sin datos</div>
         <img src="podio/piloto3.png" alt="Tercer Lugar" id="tercero" class="piloto">
-        <div id="nombre-tercero" class="nombre">AR7 Chupete</div>
+        <div id="nombre-tercero" class="nombre">Sin datos</div>
       </div>
     </div>
   </div>
 
-  <!-- Título para la tabla de posiciones generales -->
   <h2 style="color: white; text-align: center; margin-top: 10px;">Resultados Generales</h2>
 
-  <!-- Contenedor para la tabla de Posiciones Generales publicada -->
+  <div id="championshipContainer">
+    <label for="championshipSelect">Seleccionar Campeonato: </label>
+    <select id="championshipSelect" onchange="cargarTabla()">
+      <option value="">Selecciona un campeonato</option>
+    </select>
+  </div>
+
   <div id="tablaPublicada"></div>
 
-
   <script>
-    // Al cargar la página, se obtiene la tabla publicada desde JSONbin.io
-    window.onload = function() {
-      fetch("https://api.jsonbin.io/v3/b/67bd18b0e41b4d34e49b4ebd/latest", {
-        method: "GET",
-        headers: {
-          "X-Access-Key": "$2a$10$1cn8aImwZVBEaq8IbN8maOlFIb1sEPAM6NatIcGGc3zNCW5b5O0WW"
+    const API_KEY = '$2a$10$h8ZlsPiJ1eXRyWwRglxmC.KtBcQdEBty32Q8swnwK67yTfrbMG99S';
+    const BINS_INDEX_ID = '67bd18b0e41b4d34e49b4ebd';
+
+    async function getChampionshipBins() {
+      try {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${BINS_INDEX_ID}/latest`, {
+          method: 'GET',
+          headers: {
+            'X-Master-Key': API_KEY
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`Error HTTP al obtener bins index: ${response.status} - ${response.statusText}`);
         }
-      })
-      .then(response => response.json())
-      .then(json => {
-        if (json && json.record && json.record.tablaPosicionesGenerales) {
-          document.getElementById('tablaPublicada').innerHTML = json.record.tablaPosicionesGenerales;
-        }
-      })
-      .catch(err => {
-        console.error("Error al obtener la tabla publicada:", err);
-      });
+        const json = await response.json();
+        console.log('Contenido del bin maestro:', json.record); // Depuración
+        return json.record || {};
+      } catch (err) {
+        console.error('Error al obtener la lista de bins:', err.message);
+        alert(`Error al obtener la lista de campeonatos: ${err.message}. Por favor, verifica la clave API o el ID del bin maestro.`);
+        return {};
+      }
     }
+
+    async function populateChampionships() {
+      const select = document.getElementById('championshipSelect');
+      select.innerHTML = '<option value="">Selecciona un campeonato</option>';
+      const bins = await getChampionshipBins();
+      Object.keys(bins).forEach(championshipName => {
+        if (bins[championshipName] !== BINS_INDEX_ID) { // Excluir el bin maestro
+          const option = document.createElement('option');
+          option.value = championshipName;
+          option.textContent = championshipName;
+          select.appendChild(option);
+        }
+      });
+      console.log('Campeonatos poblados:', Object.keys(bins)); // Depuración
+    }
+
+    async function getBinIdByName(championshipName) {
+      const bins = await getChampionshipBins();
+      const binId = bins[championshipName] || null;
+      console.log(`Buscando binId para ${championshipName}: ${binId}`); // Depuración
+      return binId;
+    }
+
+    async function updatePodium(championshipName) {
+      const nombrePrimer = document.getElementById('nombre-primer');
+      const nombreSegundo = document.getElementById('nombre-segundo');
+      const nombreTercero = document.getElementById('nombre-tercero');
+
+      nombrePrimer.textContent = 'Sin datos';
+      nombreSegundo.textContent = 'Sin datos';
+      nombreTercero.textContent = 'Sin datos';
+
+      if (!championshipName) {
+        return;
+      }
+
+      try {
+        const binId = await getBinIdByName(championshipName);
+        if (!binId) {
+          console.log(`No se encontró binId para ${championshipName}`); // Depuración
+          return;
+        }
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+          method: 'GET',
+          headers: {
+            'X-Master-Key': API_KEY
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`Error HTTP al cargar datos para ${championshipName}: ${response.status} - ${response.statusText}`);
+        }
+        const json = await response.json();
+        console.log(`Datos cargados para ${championshipName}:`, json.record); // Depuración
+        const data = json.record || { pilotos: {} };
+        let lastRace = 0;
+        for (let i = 1; i <= 7; i++) {
+          if (data.pilotos['carrera' + i] && data.pilotos['carrera' + i].some(piloto => piloto)) {
+            lastRace = i;
+          }
+        }
+        if (lastRace > 0) {
+          const pilotos = data.pilotos['carrera' + lastRace] || [];
+          if (pilotos[0]) nombrePrimer.textContent = pilotos[0];
+          if (pilotos[1]) nombreSegundo.textContent = pilotos[1];
+          if (pilotos[2]) nombreTercero.textContent = pilotos[2];
+        }
+      } catch (err) {
+        console.error(`Error al actualizar el podio para ${championshipName}:`, err.message);
+        alert(`Error al actualizar el podio: ${err.message}. Revisa la consola para más detalles.`);
+      }
+    }
+
+    async function cargarTabla() {
+      const championshipName = document.getElementById('championshipSelect').value;
+      const tablaPublicada = document.getElementById('tablaPublicada');
+      tablaPublicada.innerHTML = '';
+
+      await updatePodium(championshipName);
+
+      if (!championshipName) {
+        tablaPublicada.innerHTML = '<p>Por favor, selecciona un campeonato.</p>';
+        return;
+      }
+
+      try {
+        const binId = await getBinIdByName(championshipName);
+        if (!binId) {
+          tablaPublicada.innerHTML = `<p>No se encontró el bin para el campeonato "${championshipName}".</p>`;
+          return;
+        }
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+          method: 'GET',
+          headers: {
+            'X-Master-Key': API_KEY
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`Error HTTP al cargar tabla para ${championshipName}: ${response.status} - ${response.statusText}`);
+        }
+        const json = await response.json();
+        console.log(`Datos de tabla para ${championshipName}:`, json.record); // Depuración
+        if (json.record && json.record.tablaPosicionesGenerales) {
+          tablaPublicada.innerHTML = json.record.tablaPosicionesGenerales;
+        } else {
+          tablaPublicada.innerHTML = `<p>No hay tabla publicada para el campeonato "${championshipName}".</p>`;
+        }
+      } catch (err) {
+        console.error(`Error al cargar la tabla para ${championshipName}:`, err.message);
+        tablaPublicada.innerHTML = `<p>Error al cargar la tabla para ${championshipName}: ${err.message}. Revisa la consola para más detalles.</p>`;
+      }
+    }
+
+    window.onload = function() {
+      populateChampionships();
+      cargarTabla();
+    };
   </script>
 </body>
 </html>
