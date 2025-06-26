@@ -7,16 +7,25 @@
       border-collapse: collapse;
       width: 100%;
       font-family: Arial, sans-serif;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     th, td {
       border: 1px solid #ddd;
-      padding: 8px;
+      padding: 12px;
       text-align: left;
     }
     th {
-      background-color: #f2f2f2;
+      background-color: #2c3e50;
+      color: white;
       font-weight: bold;
     }
+    tr:nth-child(1) { background-color: #ffd700; } /* Oro para 1er lugar */
+    tr:nth-child(2) { background-color: #c0c0c0; } /* Plata para 2do lugar */
+    tr:nth-child(3) { background-color: #cd7f32; } /* Bronce para 3er lugar */
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    tr:hover { background-color: #f1f1f1; }
+    .delta-positive { color: #28a745; font-weight: bold; }
+    .delta-negative { color: #dc3545; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -50,8 +59,7 @@
         tableBody.innerHTML = '';
 
         rows.forEach((row, index) => {
-          // Omitir la primera fila si es el encabezado
-          if (index === 0 && row.querySelector('th')) return;
+          if (index === 0 && row.querySelector('th')) return; // Omitir encabezado
           const cells = row.querySelectorAll('td');
           if (cells.length >= 8) {
             const tr = document.createElement('tr');
@@ -61,8 +69,15 @@
               // Extraer color de fondo
               const bgColor = cells[i]?.style.backgroundColor || 
                              getComputedStyle(cells[i]).backgroundColor || '';
-              if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
-                td.style.backgroundColor = bgColor;
+              if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && index > 2) {
+                td.style.backgroundColor = bgColor; // Aplica color solo si no es top 3
+              }
+              // Colorear Delta Elo
+              if (i === 4 && td.textContent) { // Columna Delta Elo
+                const delta = parseFloat(td.textContent.replace('±', ''));
+                if (!isNaN(delta)) {
+                  td.className = delta > 0 ? 'delta-positive' : delta < 0 ? 'delta-negative' : '';
+                }
               }
               tr.appendChild(td);
             }
