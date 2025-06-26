@@ -3,27 +3,32 @@
 <head>
   <title>Tabla de Clasificación</title>
   <style>
+    body {
+      background-color: #000000;
+    }
     table {
       border-collapse: collapse;
       width: 100%;
       font-family: Arial, sans-serif;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+      color: #ffffff;
     }
     th, td {
-      border: 1px solid #ddd;
+      border: 1px solid #555555;
       padding: 12px;
       text-align: left;
+      background-color: #333333;
     }
     th {
       background-color: #2c3e50;
-      color: white;
+      color: #ffffff;
       font-weight: bold;
     }
-    tr:nth-child(1) { background-color: #ffd700; } /* Oro para 1er lugar */
-    tr:nth-child(2) { background-color: #c0c0c0; } /* Plata para 2do lugar */
-    tr:nth-child(3) { background-color: #cd7f32; } /* Bronce para 3er lugar */
-    tr:nth-child(even) { background-color: #f9f9f9; }
-    tr:hover { background-color: #f1f1f1; }
+    tr:nth-child(1) { background-color: #ffd700; color: #ffffff; } /* Oro para 1er lugar */
+    tr:nth-child(2) { background-color: #c0c0c0; color: #ffffff; } /* Plata para 2do lugar */
+    tr:nth-child(3) { background-color: #cd7f32; color: #ffffff; } /* Bronce para 3er lugar */
+    tr:nth-child(even) { background-color: #444444; }
+    tr:hover { background-color: #555555; }
     .delta-positive { color: #28a745; font-weight: bold; }
     .delta-negative { color: #dc3545; font-weight: bold; }
   </style>
