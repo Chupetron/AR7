@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tabla de Clasificación</title>
+</head>
+<body>
+  <table id="rankingTable" border="1">
+    <thead>
+      <tr>
+        <th>Ranking</th>
+        <th>ID Jugador</th>
+        <th>Nombre</th>
+        <th>Rating Actual</th>
+        <th>Delta Elo</th>
+        <th>Total Carreras</th>
+        <th>Cantidad de Victorias</th>
+        <th>Cantidad de Podios</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+  <script>
+    async function fetchSheetData() {
+      const response = await fetch('https://docs.google.com/spreadsheets/d/16wmtx3BK1UrxTTJZdbT7HQ73DwIQLMnNCDHORRxsZp8/edit?gid=585549244#gid=585549244');
+      const text = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const rows = doc.querySelectorAll('table tbody tr');
+
+      const tableBody = document.getElementById('tableBody');
+      tableBody.innerHTML = '';
+
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 8) {
+          const tr = document.createElement('tr');
+          for (let i = 0; i < 8; i++) {
+            const td = document.createElement('td');
+            td.textContent = cells[i]?.textContent || '';
+            tr.appendChild(td);
+          }
+          tableBody.appendChild(tr);
+        }
+      });
+    }
+
+    fetchSheetData();
+    setInterval(fetchSheetData, 60000); // Actualiza cada 60 segundos
+  </script>
+</body>
+</html>
